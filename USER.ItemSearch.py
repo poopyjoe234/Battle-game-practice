@@ -47,7 +47,7 @@ def display_item_by_id(item_id: int, all_items: AllItems):
 all_items = AllItems()
 
 # Define a list of item IDs you want to search for
-item_ids_to_search = [1291]
+item_ids_to_search = [1075, 1087, 1103, 1117, 1139, 1155, 1173, 1189, 8844, 7454, 1277, 1291, 1205, 1321, 3095, 1237]
 
 # Display the item details for each item ID in the list
 for item_id in item_ids_to_search:
