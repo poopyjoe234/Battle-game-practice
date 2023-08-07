@@ -56,7 +56,7 @@ def Battle():
 Player_player_wins = 0
 Computer_player_wins = 0
 
-for i in range(50):
+for i in range(100):
     Computer_player = Computer()
     Player_player = Player()
     result = Battle()

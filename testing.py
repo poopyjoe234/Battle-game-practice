@@ -50,10 +50,11 @@ class NPC_class:
         self.NPC_hp()
         self.NPC_attack_speed()
         self.NPC_attack_damage()
+
     def NPC_attack(self, Player):
         Opponent_hp = Player.hp - self.attack_dmg
         Player.hp = Opponent_hp
-        print(f"NPC has done {self.attack_dmg} damage to their opponent.\n")
+        print(f"NPC has done {self.attack_dmg} damage to the Player.\n")
         time.sleep(1)
 
     def NPC_hp(self):
@@ -93,7 +94,7 @@ def Battle():
         print(colorama.Fore.LIGHTYELLOW_EX)
         print(f"Computer HP: {Computer_player.hp}\n")
         if Computer_player.hp <= 0:
-            print("Player has defeated Computer.\n")
+            print("Player has defeated NPC.\n")
             return 1
             break
 
@@ -105,7 +106,7 @@ def Battle():
         print(colorama.Fore.LIGHTYELLOW_EX)
         print(f"Player HP: {Player_player.hp}\n")
         if Player_player.hp <= 0:
-            print("Computer has defeated Player.\n")
+            print("NPC has defeated Player.\n")
             return 2
             break
 
@@ -115,7 +116,7 @@ def Battle():
 # determine if the attack is blocked before the attack
 
 
-for i in range(1):
+for i in range(10):
 
     Player_player_wins = 0
     NPC_wins = 0
