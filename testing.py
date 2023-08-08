@@ -3,14 +3,14 @@ import random
 import colorama
 
 
-
 class Player_combat_interface:
-    def __init__(self):
-class Player:
     def __init__(self):
         self.hp = None
         self.attack_damage = None
         self.attack_speed = None
+
+class Player:
+    def __init__(self):
         self.Player_hp()
         self.Player_damage()
         self.Player_attack_speed()
@@ -39,9 +39,9 @@ class Player:
             print("----------\n")
             time.sleep(1.5)
 
-    def Player_attack(self, Computer):
-        Opponent_hp = Computer.hp - self.attack_damage
-        Computer.hp = Opponent_hp
+    def Player_attack(self, NPC_class):
+        Opponent_hp = NPC_class.hp - self.attack_damage
+        NPC_class.hp = Opponent_hp
         print(f"Player has done {self.attack_damage} damage to their opponent.\n")
         time.sleep(1)
 
@@ -74,6 +74,7 @@ class NPC_class(NPC_combat_interface):
 
     def NPC_attack_damage(self):
         self.attack_damage = 1
+        
     def NPC_attack_speed(self):
         self.attack_speed = 1
 
