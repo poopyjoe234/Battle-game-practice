@@ -2,20 +2,24 @@ import time
 import random
 import colorama
 
+
+
+class Player_combat_interface:
+    def __init__(self):
 class Player:
     def __init__(self):
-        self.attack_dmg = None
         self.hp = None
+        self.attack_damage = None
         self.attack_speed = None
         self.Player_hp()
-        self.Player_dmg()
+        self.Player_damage()
         self.Player_attack_speed()
 
     def Player_hp(self):
         self.hp = 10
 
-    def Player_dmg(self):
-        self.attack_dmg = 1
+    def Player_damage(self):
+        self.attack_damage = 1
 
     def Player_attack_speed(self):
         self.attack_speed = 1
@@ -36,32 +40,40 @@ class Player:
             time.sleep(1.5)
 
     def Player_attack(self, Computer):
-        Opponent_hp = Computer.hp - self.attack_dmg
+        Opponent_hp = Computer.hp - self.attack_damage
         Computer.hp = Opponent_hp
-        print(f"Player has done {self.attack_dmg} damage to their opponent.\n")
+        print(f"Player has done {self.attack_damage} damage to their opponent.\n")
         time.sleep(1)
 
+    def Incoming_damage(self):
+        Incoming_damage = None
 
-class NPC_class:
+class NPC_combat_interface:
     def __init__(self):
         self.hp = None
-        self.attack_dmg = None
+        self.attack_damage = None
         self.attack_speed = None
+
+
+class NPC_class(NPC_combat_interface):
+    def __init__(self):
+        super().__init__()
         self.NPC_hp()
         self.NPC_attack_speed()
         self.NPC_attack_damage()
+        self.NPC_Deflect_chance()
 
     def NPC_attack(self, Player):
-        Opponent_hp = Player.hp - self.attack_dmg
+        Opponent_hp = Player.hp - self.attack_damage
         Player.hp = Opponent_hp
-        print(f"NPC has done {self.attack_dmg} damage to the Player.\n")
+        print(f"NPC has done {self.attack_damage} damage to the Player.\n")
         time.sleep(1)
 
     def NPC_hp(self):
         self.hp = 10
 
     def NPC_attack_damage(self):
-        self.attack_dmg = 1
+        self.attack_damage = 1
     def NPC_attack_speed(self):
         self.attack_speed = 1
 
@@ -113,10 +125,7 @@ def Battle():
     time.sleep(3)
 
 
-# determine if the attack is blocked before the attack
-
-
-for i in range(10):
+for i in range(1):
 
     Player_player_wins = 0
     NPC_wins = 0
@@ -133,3 +142,4 @@ for i in range(10):
 
 print(f"Player 1 wins: {Player_player_wins}")
 print(f"NPC wins: {NPC_wins}")
+
