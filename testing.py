@@ -50,49 +50,13 @@ class Player:
         time.sleep(1)
 
     # subclass class for defining player inventory system
-    class Player_inventory_interface:
-        def __init__(self):
-            self.inventory_slot_one = None
-            self.inventory_slot_two = None
-            self.inventory_slot_three = None
-            self.inventory_slot_four = None
-            self.inventory_slot_five = None
-            self.inventory_slot_six = None
-            self.inventory_slot_seven = None
-            self.inventory_slot_eight = None
-            self.inventory_slot_nine = None
-            self.inventory_slot_ten = None
+class Player_inventory_interface:
+    def __init__(self):
+        self.inventory = [None] * 10  # Initialize 10 empty slots
 
-        def inventory_slot_1(self):
-            pass
-
-        def inventory_slot_2(self):
-            pass
-
-        def inventory_slot_3(self):
-            pass
-
-        def inventory_slot_4(self):
-            pass
-
-        def inventory_slot_5(self):
-            pass
-
-        def inventory_slot_6(self):
-            pass
-
-        def inventory_slot_7(self):
-            pass
-
-        def inventory_slot_8(self):
-            pass
-
-        def inventory_slot_9(self):
-            pass
-
-        def inventory_slot_10(self):
-            pass
-
+    def view_inventory(self):
+        inventory = self.inventory
+        print(inventory)
 
 # Base class for defining common combat attributes for NPCs
 class NPC_combat_interface:
@@ -172,20 +136,38 @@ def Battle():
             return 2
 
 # Main loop to run the battle; change the integer in the range function for the amount of loops.
-for i in range(1):
+# for i in range(1):
+#
+#     Player_player_wins = 0
+#     NPC_wins = 0
+#
+# Computer_player = NPC_class()
+# Player_player = Player()
+# result = Battle()
+#
+#     if result == 1:
+#         Player_player_wins += 1
+#     else:
+#         result == 2
+#         NPC_wins += 1
+#
+# print(f"Player 1 wins: {Player_player_wins}")
+# print(f"NPC wins: {NPC_wins}")
 
-    Player_player_wins = 0
-    NPC_wins = 0
 
-    Computer_player = NPC_class()
-    Player_player = Player()
-    result = Battle()
+# subclass class for defining player inventory system
+class Player_inventory_interface:
+    def __init__(self):
+        self.inventory = [None] * 10  # Initialize 10 empty slots
 
-    if result == 1:
-        Player_player_wins += 1
-    else:
-        result == 2
-        NPC_wins += 1
+    def print_inventory(self):
+        for index, empty_slot in enumerate(self.inventory):
+            #The enumerate function takes an iterable (like a list)
+            # and returns both the index (position) and the value of each item
+            print(f"Slot {index + 1}: {'Empty.' if empty_slot is None else empty_slot}")
 
-print(f"Player 1 wins: {Player_player_wins}")
-print(f"NPC wins: {NPC_wins}")
+
+
+Player = Player()
+inventory = Player_inventory_interface()
+Player_inventory_interface.print_inventory(inventory)

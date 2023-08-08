@@ -1,6 +1,6 @@
-from osrsbox.items_api.all_items import AllItems
+import osrsbox.items_api.all_items
 
-def display_item_by_id(item_id: int, all_items: AllItems):
+def display_item_by_id(item_id: int, all_items: osrsbox.items_api.all_items.AllItems):
     try:
         # Look up the item by ID
         item = all_items.lookup_by_item_id(item_id)
@@ -30,8 +30,9 @@ def display_item_by_id(item_id: int, all_items: AllItems):
             print(f"prayer: {equipment.prayer}")
             print(f"slot: {equipment.slot}")
             print("requirements:", end=" ")
-            for skill, level in equipment.requirements.items():
-                print(f"{skill}: {level}", end=" ")
+            if equipment.requirements:
+                for skill, level in equipment.requirements.items():
+                    print(f"{skill}: {level}", end=" ")
             print()  # Newline after requirements
         else:
             print("This item is not equipable.")
@@ -44,7 +45,7 @@ def display_item_by_id(item_id: int, all_items: AllItems):
         print(f"Item with ID {item_id} not found.")
 
 # Load all items
-all_items = AllItems()
+all_items = osrsbox.items_api.all_items.AllItems()
 
 # Define a list of item IDs you want to search for
 item_ids_to_search = [1075, 1087, 1103, 1117, 1139, 1155, 1173, 1189, 8844, 7454, 1277, 1291, 1205, 1321, 3095, 1237]
