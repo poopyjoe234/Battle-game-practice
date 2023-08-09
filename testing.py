@@ -17,6 +17,9 @@ class Player:
         self.Player_damage()
         self.Player_attack_speed()
 
+       
+
+
     def Player_hp(self):
         self.hp = 1  # Player's health points
 
@@ -34,6 +37,7 @@ class Player:
             print("The next attack will do damage to the Player.")
             print("----------\n")
             time.sleep(1.5)
+
         else:
             self.hp += 1  # Increase player's health if deflected
             print(f"{Deflect_chance + 1} percent.")
@@ -72,7 +76,7 @@ class goblin_class(NPC_combat_interface):
         self.goblin_hp()
         self.goblin_attack_speed()
         self.goblin_attack_damage()
-        self.goblin_Deflect_chance()
+        self.goblin_drop_on_death()
 
     # Method to handle NPC's attack on the player
     def goblin_attack(self, Player):
@@ -96,17 +100,20 @@ class goblin_class(NPC_combat_interface):
             Deflect_chance = random.randint(0, 99)
             if Deflect_chance > 24:
                 print(f"{Deflect_chance + 1} percent.")
-                print("The next attack will do damage to NPC.")
+                print("The next attack will do damage to Goblin.")
                 print("----------\n")
                 time.sleep(1.5)
                 break
+
             else:
                 self.hp += 1  # Increase NPC's health if deflected
                 print(f"{Deflect_chance + 1} percent.")
-                print("Deflected, the next attack will do no damage to NPC.")
+                print("Deflected, the next attack will do no damage to Goblin.")
                 print("----------\n")
                 time.sleep(1.5)
                 break
+
+  
 
 # Function to handle the battle sequence
 def Battle():
@@ -120,11 +127,14 @@ def Battle():
         print(colorama.Fore.LIGHTYELLOW_EX)
         print(f"Computer HP: {Computer_player.hp}\n")
         if Computer_player.hp <= 0:
-            print("Player has defeated NPC.\n")
+            print("Player has defeated Goblin.\n")
             return 1
+        else:
+            pass
 
-        time.sleep(.4)
+
         print(colorama.Fore.RED)
+        time.sleep(.4)
         print("Battling...\n")
         Player_player.Player_Deflect_chance()
         Computer_player.goblin_attack(Player_player)
@@ -133,6 +143,8 @@ def Battle():
         if Player_player.hp <= 0:
             print("NPC has defeated Player.\n")
             return 2
+        else:
+            pass
 
 #main loop to run the battle; change the integer in the range function for the amount of loops.
 for i in range(1):
@@ -151,7 +163,7 @@ else:
     NPC_wins += 1
 
 print(f"Player 1 wins: {Player_player_wins}")
-print(f"NPC wins: {NPC_wins}")
+print(f"NPC wins: {NPC_wins}\n")
 
 
 # subclass class for defining player inventory system
@@ -180,6 +192,7 @@ class Player_inventory_interface:
             print(f"Slot {index + 1}: {'Empty.' if empty_slot is None else empty_slot}")
 
 
+Player_player = Player()
 Goblin = goblin_class()
 inventory = Player_inventory_interface()
 Player_inventory_interface.print_inventory(inventory)
