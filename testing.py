@@ -2,7 +2,6 @@ import time
 import random
 import colorama
 
-
 # Base class for defining common combat attributes for players
 class Player_combat_interface:
     def __init__(self):
@@ -76,7 +75,7 @@ class goblin_class(NPC_combat_interface):
         self.goblin_hp()
         self.goblin_attack_speed()
         self.goblin_attack_damage()
-        self.goblin_drop_on_death()
+        self.goblin_is_alive()
 
     # Method to handle NPC's attack on the player
     def goblin_attack(self, Player):
@@ -112,6 +111,11 @@ class goblin_class(NPC_combat_interface):
                 print("----------\n")
                 time.sleep(1.5)
                 break
+
+    def goblin_is_alive(self):
+       if self.hp <= 0:
+           goblin_is_alive = True
+
 
   
 
