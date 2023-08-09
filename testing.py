@@ -2,6 +2,7 @@ import time
 import random
 import colorama
 
+
 # Base class for defining common combat attributes for players
 class Player_combat_interface:
     def __init__(self):
@@ -9,15 +10,13 @@ class Player_combat_interface:
         self.attack_damage = None
         self.attack_speed = None
 
+
 # Class to define the attributes and methods of the player
 class Player:
     def __init__(self):
         self.Player_hp()
         self.Player_damage()
         self.Player_attack_speed()
-
-       
-
 
     def Player_hp(self):
         self.hp = 1  # Player's health points
@@ -52,6 +51,8 @@ class Player:
         time.sleep(1)
 
     # subclass class for defining player inventory system
+
+
 class Player_inventory_interface:
     def __init__(self):
         self.inventory = [None] * 10  # Initialize 10 empty slots
@@ -60,12 +61,14 @@ class Player_inventory_interface:
         inventory = self.inventory
         print(inventory)
 
+
 # Base class for defining common combat attributes for NPCs
 class NPC_combat_interface:
     def __init__(self):
         self.hp = None
         self.attack_damage = None
         self.attack_speed = None
+
 
 # Class to define the attributes and methods of the goblin
 class goblin_class(NPC_combat_interface):
@@ -113,11 +116,9 @@ class goblin_class(NPC_combat_interface):
                 break
 
     def goblin_is_alive(self):
-       if self.hp <= 0:
-           goblin_is_alive = True
+        if self.hp <= 0:
+            print("death to goblin")
 
-
-  
 
 # Function to handle the battle sequence
 def Battle():
@@ -132,10 +133,10 @@ def Battle():
         print(f"Computer HP: {Computer_player.hp}\n")
         if Computer_player.hp <= 0:
             print("Player has defeated Goblin.\n")
+            Computer_player.goblin_is_alive()
             return 1
         else:
             pass
-
 
         print(colorama.Fore.RED)
         time.sleep(.4)
@@ -150,9 +151,9 @@ def Battle():
         else:
             pass
 
-#main loop to run the battle; change the integer in the range function for the amount of loops.
-for i in range(1):
 
+# main loop to run the battle; change the integer in the range function for the amount of loops.
+for i in range(1):
     Player_player_wins = 0
     NPC_wins = 0
 
@@ -191,7 +192,7 @@ class Player_inventory_interface:
 
     def print_inventory(self):
         for index, empty_slot in enumerate(self.inventory):
-            #The enumerate function takes an iterable (like a list)
+            # The enumerate function takes an iterable (like a list)
             # and returns both the index (position) and the value of each item
             print(f"Slot {index + 1}: {'Empty.' if empty_slot is None else empty_slot}")
 
