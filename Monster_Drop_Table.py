@@ -1,0 +1,1 @@
+Goblin_drops = ["Bones"]

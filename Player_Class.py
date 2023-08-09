@@ -13,9 +13,5 @@ class Player:
             self.hands_slot = None
             self.feet_slot = None
 
-    class Inventory:
-        def __init__(self):
-            self.Inventory_Slots = [None] * 28
-
 
 
