@@ -3,6 +3,7 @@ import random
 import colorama
 import Monster_Drop_Table
 
+
 # Base class for defining common combat attributes for players
 class Player_combat_interface:
     def __init__(self):
@@ -59,18 +60,27 @@ class Player_inventory_interface:
         self.inventory = None
 
     def player_inventory(self):
-            self.inventory =  {'Inventory slot 1':'Empty','Inventory slot 2': 'Empty'}
+        self.inventory = {'Inventory slot 1': 'Empty',
+                          'Inventory slot 2': 'Empty'}
 
     def print_inventory(self):
-        print(Player_inventory_interface.player_inventory(Player_inventory_interface))
+        print(self.inventory)
 
     def pickup_item_on_victory(self, goblin_is_alive):
         if not goblin_is_alive:
             pickup = input("Would you like to pickup the dropped items?\n")
-            if pickup.lower() == "yes" and Monster_Drop_Table.goblin_drops.always_dropped(Computer_player, goblin_is_alive) == True:
-                    print("working as intended.")
-
-
+            if pickup.lower() == "yes":
+                item_to_pickup = goblin_item_drops.always_dropped(goblin_is_alive)
+                if item_to_pickup:
+                    for key, value in self.inventory.items():
+                        if value == "Empty":
+                            self.inventory[key] = item_to_pickup
+                            print(f"Picked up {item_to_pickup} and added to the {key}.")
+                            break
+                    else:
+                        print("No space in inventory to pick up the item.")
+                else:
+                    print("No item to pick up.")
 
     class Worn_Equipment:
         def __init__(self):
@@ -146,7 +156,6 @@ class goblin_class(NPC_combat_interface):
             return goblin_is_alive
 
 
-
 # Function to handle the battle sequence
 def Battle():
     # Battle loop
@@ -160,10 +169,9 @@ def Battle():
         print(f"Computer HP: {Computer_player.hp}\n")
         if Computer_player.hp <= 0:
             print("Player has defeated Goblin.\n")
-            goblin_is_alive_status = goblin_class.goblin_is_alive(Computer_player)
-            Monster_Drop_Table.goblin_drops.always_dropped(goblin_class, goblin_is_alive_status)
-            Player_inventory_interface.pickup_item_on_victory(Player_inventory_interface, goblin_is_alive_status)
-
+            goblin_is_alive_status = Computer_player.goblin_is_alive()
+            item_to_pickup = goblin_item_drops.always_dropped(goblin_is_alive_status)
+            player_inventory.pickup_item_on_victory(goblin_is_alive_status)
             return 1
         else:
             pass
@@ -187,7 +195,10 @@ for i in range(1):
     Player_player_wins = 0
     NPC_wins = 0
 
+player_inventory = Player_inventory_interface()
+player_inventory.player_inventory()
 Computer_player: goblin_class = goblin_class()
+goblin_item_drops = Monster_Drop_Table.goblin_drops()
 Player_player = Player()
 result = Battle()
 
@@ -200,7 +211,3 @@ else:
 print(colorama.Fore.LIGHTYELLOW_EX)
 print(f"Player 1 wins: {Player_player_wins}")
 print(f"NPC wins: {NPC_wins}\n")
-
-
-Player_player = Player()
-Goblin = goblin_class()
