@@ -1,7 +1,7 @@
 import time
 import random
 import colorama
-
+import Monster_Drop_Table
 
 # Base class for defining common combat attributes for players
 class Player_combat_interface:
@@ -53,13 +53,30 @@ class Player:
     # subclass class for defining player inventory system
 
 
+# subclass class for defining player inventory system
 class Player_inventory_interface:
     def __init__(self):
-        self.inventory = [None] * 10  # Initialize 10 empty slots
+        self.inventory = None
 
-    def view_inventory(self):
-        inventory = self.inventory
-        print(inventory)
+    def player_inventory(self):
+            self.inventory =  {'Inventory slot 1':'Empty','Inventory slot 2': 'Empty'}
+
+    class Worn_Equipment:
+        def __init__(self):
+            self.head_slot = None
+            self.cape_slot = None
+            self.neck_slot = None
+            self.ammunition_slot = None
+            self.weapon_slot = None
+            self.shield_slot = None
+            self.two_handed_slot = None
+            self.body_slot = None
+            self.legs_slot = None
+            self.hands_slot = None
+            self.feet_slot = None
+
+    def print_inventory(self):
+        print(Player_inventory_interface.player_inventory(Player_inventory_interface))
 
 
 # Base class for defining common combat attributes for NPCs
@@ -117,7 +134,15 @@ class goblin_class(NPC_combat_interface):
 
     def goblin_is_alive(self):
         if self.hp <= 0:
-            print("death to goblin")
+            goblin_is_alive = False
+            return goblin_is_alive
+
+    def goblin_drop_on_defeat(self, goblin_is_alive):
+        if not goblin_is_alive:
+            Monster_Drop_Table.goblin_drops.always_dropped(goblin_class)
+        else:
+            pass
+
 
 
 # Function to handle the battle sequence
@@ -133,7 +158,9 @@ def Battle():
         print(f"Computer HP: {Computer_player.hp}\n")
         if Computer_player.hp <= 0:
             print("Player has defeated Goblin.\n")
-            Computer_player.goblin_is_alive()
+
+            Monster_Drop_Table.goblin_drops.always_dropped(goblin_class)
+
             return 1
         else:
             pass
@@ -171,33 +198,5 @@ print(f"Player 1 wins: {Player_player_wins}")
 print(f"NPC wins: {NPC_wins}\n")
 
 
-# subclass class for defining player inventory system
-class Player_inventory_interface:
-    def __init__(self):
-        self.inventory = [None] * 10  # Initialize 10 empty slots
-
-    class Worn_Equipment:
-        def __init__(self):
-            self.head_slot = None
-            self.cape_slot = None
-            self.neck_slot = None
-            self.ammunition_slot = None
-            self.weapon_slot = None
-            self.shield_slot = None
-            self.two_handed_slot = None
-            self.body_slot = None
-            self.legs_slot = None
-            self.hands_slot = None
-            self.feet_slot = None
-
-    def print_inventory(self):
-        for index, empty_slot in enumerate(self.inventory):
-            # The enumerate function takes an iterable (like a list)
-            # and returns both the index (position) and the value of each item
-            print(f"Slot {index + 1}: {'Empty.' if empty_slot is None else empty_slot}")
-
-
 Player_player = Player()
 Goblin = goblin_class()
-inventory = Player_inventory_interface()
-Player_inventory_interface.print_inventory(inventory)
