@@ -61,6 +61,17 @@ class Player_inventory_interface:
     def player_inventory(self):
             self.inventory =  {'Inventory slot 1':'Empty','Inventory slot 2': 'Empty'}
 
+    def print_inventory(self):
+        print(Player_inventory_interface.player_inventory(Player_inventory_interface))
+
+    def pickup_item_on_victory(self, goblin_is_alive):
+        if not goblin_is_alive:
+            pickup = input("Would you like to pickup the dropped items?\n")
+            if pickup.lower() == "yes" and Monster_Drop_Table.goblin_drops.always_dropped(Computer_player, goblin_is_alive) == True:
+                    print("working as intended.")
+
+
+
     class Worn_Equipment:
         def __init__(self):
             self.head_slot = None
@@ -74,9 +85,6 @@ class Player_inventory_interface:
             self.legs_slot = None
             self.hands_slot = None
             self.feet_slot = None
-
-    def print_inventory(self):
-        print(Player_inventory_interface.player_inventory(Player_inventory_interface))
 
 
 # Base class for defining common combat attributes for NPCs
@@ -137,12 +145,6 @@ class goblin_class(NPC_combat_interface):
             goblin_is_alive = False
             return goblin_is_alive
 
-    def goblin_drop_on_defeat(self, goblin_is_alive):
-        if not goblin_is_alive:
-            Monster_Drop_Table.goblin_drops.always_dropped(goblin_class)
-        else:
-            pass
-
 
 
 # Function to handle the battle sequence
@@ -158,8 +160,9 @@ def Battle():
         print(f"Computer HP: {Computer_player.hp}\n")
         if Computer_player.hp <= 0:
             print("Player has defeated Goblin.\n")
-
-            Monster_Drop_Table.goblin_drops.always_dropped(goblin_class)
+            goblin_is_alive_status = goblin_class.goblin_is_alive(Computer_player)
+            Monster_Drop_Table.goblin_drops.always_dropped(goblin_class, goblin_is_alive_status)
+            Player_inventory_interface.pickup_item_on_victory(Player_inventory_interface, goblin_is_alive_status)
 
             return 1
         else:
@@ -184,7 +187,7 @@ for i in range(1):
     Player_player_wins = 0
     NPC_wins = 0
 
-Computer_player = goblin_class()
+Computer_player: goblin_class = goblin_class()
 Player_player = Player()
 result = Battle()
 
@@ -194,6 +197,7 @@ else:
     result == 2
     NPC_wins += 1
 
+print(colorama.Fore.LIGHTYELLOW_EX)
 print(f"Player 1 wins: {Player_player_wins}")
 print(f"NPC wins: {NPC_wins}\n")
 
