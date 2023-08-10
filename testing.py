@@ -100,7 +100,7 @@ class goblin_class(NPC_combat_interface):
         super().__init__()
         self.goblin_hp()            # Initialize goblin's health
         self.goblin_attack_speed()  # Initialize goblin's attack speed
-        self.goblin_attack_damage()  # Initialize goblin's attack damage
+        self.goblin_attack_damage() # Initialize goblin's attack damage
         self.goblin_is_alive()      # Check if goblin is alive
 
     # Handle goblin's attack on the player, reducing player's health
