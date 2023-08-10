@@ -37,12 +37,14 @@ class Player(Player_combat_interface):
             print("The next attack will do damage to the Player.")
             print("----------\n")
             time.sleep(1.5)
+            return player_deflect_chance
         else:
             self.hp += 1  # Increase player's health if deflected, since no proper deflect method is implemented
             print(f"{Deflect_chance + 1} percent.")
             print("Deflected, the next attack will do no damage to the Player.")
             print("----------\n")
             time.sleep(1.5)
+            return player_deflect_chance
 
     # Handle player's attack on the NPC, reducing NPC's health
     def Player_attack(self, goblin_class):
@@ -50,6 +52,7 @@ class Player(Player_combat_interface):
         goblin_class.hp = Opponent_hp
         print(f"Player has done {self.attack_damage} damage to their opponent.\n")
         time.sleep(1)
+
 
 # Class to manage player's inventory
 class Player_inventory_interface:
@@ -67,6 +70,7 @@ class Player_inventory_interface:
     # Handle item pickup after victory against a goblin
     def pickup_item_on_victory(self, goblin_is_alive):
         if not goblin_is_alive:
+            print(colorama.Fore.GREEN)
             pickup = input("Would you like to pickup the dropped items?\n")
             if pickup.lower() == "yes":
                 item_to_pickup = goblin_item_drops.always_dropped(goblin_is_alive)
@@ -74,19 +78,30 @@ class Player_inventory_interface:
                     for key, value in self.inventory.items():
                         if value == "Empty":
                             self.inventory[key] = item_to_pickup
-                            print(f"Picked up {item_to_pickup} and added to the {key}.")
+                            print(colorama.Fore.GREEN)
+                            print(f"Picked up {item_to_pickup} and added to your bag.")
                             break
                     else:
+                        print(colorama.Fore.GREEN)
                         print("No space in inventory to pick up the item.")
                 else:
+                    print(colorama.Fore.GREEN)
                     print("No item to pick up.")
 
     # Nested class for worn equipment
     class Worn_Equipment:
         def __init__(self):
             self.head_slot = None
-            # More equipment slots defined here...
-
+            self.cape_slot = None
+            self.neck_slot = None
+            self.ammunition_slot = None
+            self.weapon_slot = None
+            self.shield_slot = None
+            self.two_handed_slot = None
+            self.body_slot = None
+            self.legs_slot = None
+            self.hands_slot = None
+            self.feet_slot = None
 # Base class for defining common combat attributes for NPCs
 class NPC_combat_interface:
     def __init__(self):
