@@ -2,6 +2,7 @@ import time
 import random
 import colorama
 import Monster_Drop_Table
+import item_behaviors
 
 
 # Base class for defining common combat attributes for players
@@ -30,21 +31,12 @@ class Player(Player_combat_interface):
         self.attack_speed = 1  # Set player's initial attack speed
 
     # Calculate chance to deflect an attack and either reduce or increase HP accordingly
-    def Player_Deflect_chance(self):
-        Deflect_chance = random.randint(0, 99)  # Generate random chance
-        if Deflect_chance > 24:
-            print(f"{Deflect_chance + 1} percent.")
-            print("The next attack will do damage to the Player.")
-            print("----------\n")
-            time.sleep(1.5)
-            return player_deflect_chance
+    def deflect_attack(self, goblin_attack):
+        if goblin_attack == True:
+            print("Enemy attack has been deflected!")
+            Computer_player.attack_damage = 0
         else:
-            self.hp += 1  # Increase player's health if deflected, since no proper deflect method is implemented
-            print(f"{Deflect_chance + 1} percent.")
-            print("Deflected, the next attack will do no damage to the Player.")
-            print("----------\n")
-            time.sleep(1.5)
-            return player_deflect_chance
+            print(f"You take {Computer_player.attack_damage} damage.")
 
     # Handle player's attack on the NPC, reducing NPC's health
     def Player_attack(self, goblin_class):
@@ -120,13 +112,26 @@ class goblin_class(NPC_combat_interface):
 
     # Handle goblin's attack on the player, reducing player's health
     def goblin_attack(self, Player):
-        Opponent_hp = Player.hp - self.attack_damage
-        Player.hp = Opponent_hp
-        print(f"Goblin has done {self.attack_damage} damage to the Player.\n")
-        time.sleep(1)
+        while True:
+            Deflect_chance = random.randint(0, 99)  # Generate random chance
+            if Deflect_chance > 24:
+                print(f"{Deflect_chance + 1} percent.")
+                Opponent_hp = Player.hp - self.attack_damage
+                Player.hp = Opponent_hp
+                print(f"Goblin has done {self.attack_damage} damage to the Player.\n")
+                print("----------\n")
+                time.sleep(1.5)
+                return False
+
+            elif Deflect_chance < 24:
+                    print(f"{Deflect_chance + 1} percent, Player has deflected the Goblin's attack.")
+                    time.sleep(1.5)
+                    return True
+
+
 
     def goblin_hp(self):
-        self.hp = 1  # Set goblin's initial health points
+        self.hp = 2  # Set goblin's initial health points
 
     def goblin_attack_damage(self):
         self.attack_damage = 1  # Set goblin's initial attack damage
@@ -135,22 +140,7 @@ class goblin_class(NPC_combat_interface):
         self.attack_speed = 1  # Set goblin's initial attack speed
 
     # Calculate chance to deflect an attack and either reduce or increase HP accordingly
-    def goblin_Deflect_chance(self):
-        while True:
-            Deflect_chance = random.randint(0, 99)  # Generate random chance
-            if Deflect_chance > 24:
-                print(f"{Deflect_chance + 1} percent.")
-                print("The next attack will do damage to Goblin.")
-                print("----------\n")
-                time.sleep(1.5)
-                break
-            else:
-                self.hp += 1  # Increase goblin's health if deflected
-                print(f"{Deflect_chance + 1} percent.")
-                print("Deflected, the next attack will do no damage to Goblin.")
-                print("----------\n")
-                time.sleep(1.5)
-                break
+
 
     # Check if goblin is alive based on HP
     def goblin_is_alive(self):
@@ -166,7 +156,7 @@ def Battle():
         print(colorama.Fore.LIGHTWHITE_EX)
         time.sleep(.4)
         print("Battling...\n")
-        Computer_player.goblin_Deflect_chance()  # Goblin's chance to deflect
+        # Goblin's chance to deflect
         Player_player.Player_attack(Computer_player)  # Player's attack on Goblin
         print(colorama.Fore.LIGHTYELLOW_EX)
         print(f"Computer HP: {Computer_player.hp}\n")
@@ -183,15 +173,8 @@ def Battle():
         print(colorama.Fore.RED)
         time.sleep(.4)
         print("Battling...\n")
-        Player_player.Player_Deflect_chance()  # Player's chance to deflect
-        Computer_player.goblin_attack(Player_player)  # Goblin's attack on Player
+        goblin_attack_result = Computer_player.goblin_attack(Player_player)  # Goblin's attack on Player
         print(colorama.Fore.LIGHTYELLOW_EX)
-        print(f"Player HP: {Player_player.hp}\n")
-        if Player_player.hp <= 0:
-            print("NPC has defeated Player.\n")
-            return 2
-        else:
-            pass
 
 
 # Main loop to run the battle; change the integer in the range function for the number of battles
@@ -229,3 +212,4 @@ else:
 print(colorama.Fore.LIGHTYELLOW_EX)
 print(f"Player 1 wins: {Player_player_wins}")
 print(f"NPC wins: {NPC_wins}\n")
+item_behaviors.goblin_always_dropped.examine()
