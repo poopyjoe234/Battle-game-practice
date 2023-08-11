@@ -8,21 +8,21 @@ import item_behaviors
 # Base class for defining common combat attributes for players
 class Player_combat_interface:
     def __init__(self):
-        self.hp = None              # Health Points
-        self.attack_damage = None   # Damage for each attack
-        self.attack_speed = None    # Attack speed (not used in code)
+        self.hp = None  # Health Points
+        self.attack_damage = None  # Damage for each attack
+        self.attack_speed = None  # Attack speed (not used in code)
 
 
 # Class for the player character
 class Player(Player_combat_interface):
     def __init__(self):
         super().__init__()
-        self.Player_hp()            # Initialize player's health
-        self.Player_damage()        # Initialize player's attack damage
+        self.Player_hp()  # Initialize player's health
+        self.Player_damage()  # Initialize player's attack damage
         self.Player_attack_speed()  # Initialize player's attack speed
 
     def Player_hp(self):
-        self.hp = 1  # Set player's initial health points
+        self.hp = 10  # Set player's initial health points
 
     def Player_damage(self):
         self.attack_damage = 1  # Set player's initial attack damage
@@ -34,9 +34,11 @@ class Player(Player_combat_interface):
     def deflect_attack(self, goblin_attack):
         if goblin_attack == True:
             print("Enemy attack has been deflected!")
-            Computer_player.attack_damage = 0
+            print(f"Player HP: {Player_player.hp}\n")
+
         else:
             print(f"You take {Computer_player.attack_damage} damage.")
+            print(f"Player HP: {Player_player.hp}\n")
 
     # Handle player's attack on the NPC, reducing NPC's health
     def Player_attack(self, goblin_class):
@@ -47,14 +49,21 @@ class Player(Player_combat_interface):
                 Opponent_hp = goblin_class.hp - self.attack_damage
                 goblin_class.hp = Opponent_hp
                 print(f"Player has done {self.attack_damage} damage to Goblin.\n")
+                print(f"Computer HP: {Computer_player.hp}\n")
                 print("----------\n")
                 time.sleep(1.5)
-                return False
+                break
 
             elif Deflect_chance < 24:
-                    print(f"{Deflect_chance + 1} percent, Goblin has deflected the Player's attack.")
-                    time.sleep(1.5)
-                    return True
+                print(f"{Deflect_chance + 1} percent.")
+                print("Player's attack has been deflected!\n")
+                print(f"Computer HP: {Computer_player.hp}\n")
+                print("----------\n")
+                time.sleep(1.5)
+                break
+
+            else:
+                pass
 
 
 # Class to manage player's inventory
@@ -64,11 +73,11 @@ class Player_inventory_interface:
 
     # Initialize player's inventory with two empty slots
     def player_inventory(self):
-        self.inventory = {'Inventory slot 1': 'Empty', 'Inventory slot 2': 'Empty'}
+        self.inventory = {"Inventory slot 1": "Empty", "Inventory slot 2": "Empty"}
 
     # Print content of the first inventory slot
     def print_inventory(self):
-        print(self.inventory['Inventory slot 1'])
+        print(self.inventory["Inventory slot 1"])
 
     # Handle item pickup after victory against a goblin
     def pickup_item_on_victory(self, goblin_is_alive):
@@ -105,21 +114,24 @@ class Player_inventory_interface:
             self.legs_slot = None
             self.hands_slot = None
             self.feet_slot = None
+
+
 # Base class for defining common combat attributes for NPCs
 class NPC_combat_interface:
     def __init__(self):
-        self.hp = None              # Health Points
-        self.attack_damage = None   # Damage for each attack
-        self.attack_speed = None    # Attack speed (not used in code)
+        self.hp = None  # Health Points
+        self.attack_damage = None  # Damage for each attack
+        self.attack_speed = None  # Attack speed (not used in code)
+
 
 # Class for the goblin NPC
 class goblin_class(NPC_combat_interface):
     def __init__(self):
         super().__init__()
-        self.goblin_hp()            # Initialize goblin's health
+        self.goblin_hp()  # Initialize goblin's health
         self.goblin_attack_speed()  # Initialize goblin's attack speed
-        self.goblin_attack_damage() # Initialize goblin's attack damage
-        self.goblin_is_alive()      # Check if goblin is alive
+        self.goblin_attack_damage()  # Initialize goblin's attack damage
+        self.goblin_is_alive()  # Check if goblin is alive
 
     # Handle goblin's attack on the player, reducing player's health
     def goblin_attack(self, Player):
@@ -130,25 +142,29 @@ class goblin_class(NPC_combat_interface):
                 Opponent_hp = Player.hp - self.attack_damage
                 Player.hp = Opponent_hp
                 print(f"Goblin has done {self.attack_damage} damage to the Player.\n")
+                print(f"Player HP: {Player_player.hp}\n")
                 print("----------\n")
                 time.sleep(1.5)
                 return False
 
             elif Deflect_chance < 24:
-                    print(f"{Deflect_chance + 1} percent, Player has deflected the Goblin's attack.")
-                    time.sleep(1.5)
-                    return True
+                print(
+                    f"{Deflect_chance + 1} percent, Player has deflected the Goblin's attack."
+                )
+                print(f"Player HP: {Player_player.hp}\n")
+                time.sleep(1.5)
+                return True
 
     def deflect_attack(self, Player_attack):
         if Player_attack == True:
             print("Player's attack has been deflected!")
-            Player_player.attack_damage = 0
+            print(f"Computer HP: {Computer_player.hp}\n")
         else:
             print(f"Goblin takes {Player_player.attack_damage} damage.")
-
+            print(f"Computer HP: {Computer_player.hp}\n")
 
     def goblin_hp(self):
-        self.hp = 2  # Set goblin's initial health points
+        self.hp = 10  # Set goblin's initial health points
 
     def goblin_attack_damage(self):
         self.attack_damage = 1  # Set goblin's initial attack damage
@@ -157,7 +173,6 @@ class goblin_class(NPC_combat_interface):
         self.attack_speed = 1  # Set goblin's initial attack speed
 
     # Calculate chance to deflect an attack and either reduce or increase HP accordingly
-
 
     # Check if goblin is alive based on HP
     def goblin_is_alive(self):
@@ -171,17 +186,18 @@ def Battle():
     # Battle loop, continues until one opponent is defeated
     while True:
         print(colorama.Fore.LIGHTWHITE_EX)
-        time.sleep(.4)
+        time.sleep(0.4)
         print("Battling...\n")
         # Goblin's chance to deflect
         Player_player.Player_attack(Computer_player)  # Player's attack on Goblin
         print(colorama.Fore.LIGHTYELLOW_EX)
-        print(f"Computer HP: {Computer_player.hp}\n")
         if Computer_player.hp <= 0:
             print("Player has defeated Goblin.\n")
             goblin_is_alive_status = Computer_player.goblin_is_alive()
             goblin_item_drops.always_dropped(goblin_is_alive_status)
-            player_inventory.pickup_item_on_victory(goblin_is_alive_status)  # Pick up item if Goblin defeated
+            player_inventory.pickup_item_on_victory(
+                goblin_is_alive_status
+            )  # Pick up item if Goblin defeated
             player_inventory.print_inventory()  # Print player's inventory
             return 1
         else:
@@ -192,7 +208,6 @@ def Battle():
         print("Battling...\n")
         Computer_player.goblin_attack(Player_player)
         print(colorama.Fore.LIGHTYELLOW_EX)
-        print(f"Player HP: {Player_player.hp}\n")
         if Player_player.hp <= 0:
             print("Goblin has defeated Player.\n")
             return 2
@@ -234,4 +249,5 @@ else:
 print(colorama.Fore.LIGHTYELLOW_EX)
 print(f"Player 1 wins: {Player_player_wins}")
 print(f"NPC wins: {NPC_wins}\n")
+item_behaviors.Bones
 item_behaviors.goblin_always_dropped.examine()

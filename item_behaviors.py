@@ -16,15 +16,19 @@ class items:
 
 class Bones(items):
     def __init__(self):
-        super().__init__(name="Bones", examine_description="Bones from an enemy. If they were yours, you would be dead.")
+        super().__init__(
+            name="Bones",
+            examine_description="Bones from an enemy. If they were yours, you would be dead.",
+        )
 
     def examine(self):
-        while True:
-            examine_item = input("enter //examine bones\n")
-            if examine_item == f"//examine {self.name}":
-                print(f"Item: {self.name}\nDescription: {self.examine_description}")
-                break
-
+        # while True:
+        examine_item = input("enter //examine bones\n")
+        if examine_item == f"//examine {self.name}":
+            print(f"Item: {self.name}\nDescription: {self.examine_description}")
+            # break
+        else:
+            pass
 
 
 goblin_always_dropped = Bones()
