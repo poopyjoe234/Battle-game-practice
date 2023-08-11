@@ -40,10 +40,21 @@ class Player(Player_combat_interface):
 
     # Handle player's attack on the NPC, reducing NPC's health
     def Player_attack(self, goblin_class):
-        Opponent_hp = goblin_class.hp - self.attack_damage
-        goblin_class.hp = Opponent_hp
-        print(f"Player has done {self.attack_damage} damage to their opponent.\n")
-        time.sleep(1)
+        while True:
+            Deflect_chance = random.randint(0, 99)  # Generate random chance
+            if Deflect_chance > 24:
+                print(f"{Deflect_chance + 1} percent.")
+                Opponent_hp = goblin_class.hp - self.attack_damage
+                goblin_class.hp = Opponent_hp
+                print(f"Player has done {self.attack_damage} damage to Goblin.\n")
+                print("----------\n")
+                time.sleep(1.5)
+                return False
+
+            elif Deflect_chance < 24:
+                    print(f"{Deflect_chance + 1} percent, Goblin has deflected the Player's attack.")
+                    time.sleep(1.5)
+                    return True
 
 
 # Class to manage player's inventory
@@ -128,6 +139,12 @@ class goblin_class(NPC_combat_interface):
                     time.sleep(1.5)
                     return True
 
+    def deflect_attack(self, Player_attack):
+        if Player_attack == True:
+            print("Player's attack has been deflected!")
+            Player_player.attack_damage = 0
+        else:
+            print(f"Goblin takes {Player_player.attack_damage} damage.")
 
 
     def goblin_hp(self):
@@ -171,10 +188,14 @@ def Battle():
             pass
 
         print(colorama.Fore.RED)
-        time.sleep(.4)
+        time.sleep(0.4)
         print("Battling...\n")
-        goblin_attack_result = Computer_player.goblin_attack(Player_player)  # Goblin's attack on Player
+        Computer_player.goblin_attack(Player_player)
         print(colorama.Fore.LIGHTYELLOW_EX)
+        print(f"Player HP: {Player_player.hp}\n")
+        if Player_player.hp <= 0:
+            print("Goblin has defeated Player.\n")
+            return 2
 
 
 # Main loop to run the battle; change the integer in the range function for the number of battles
@@ -186,6 +207,7 @@ for i in range(1):
 
 # Create an instance of Player_inventory_interface to manage the player's inventory
 player_inventory = Player_inventory_interface()
+
 # Call the player_inventory method to initialize the player's inventory with empty slots
 player_inventory.player_inventory()
 

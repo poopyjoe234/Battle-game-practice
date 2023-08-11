@@ -20,7 +20,7 @@ class Bones(items):
 
     def examine(self):
         while True:
-            examine_item = input("input\n")
+            examine_item = input("enter //examine bones\n")
             if examine_item == f"//examine {self.name}":
                 print(f"Item: {self.name}\nDescription: {self.examine_description}")
                 break
