@@ -80,25 +80,22 @@ class Player_inventory_interface:
         print(self.inventory["Inventory slot 1"])
 
     # Handle item pickup after victory against a goblin
-    def pickup_item_on_victory(self, goblin_is_alive):
-        if not goblin_is_alive:
+    def pickup_item_on_victory(self, item_to_pickup):
+        print(colorama.Fore.GREEN)
+        pickup = input("Would you like to pickup the dropped items?\n")
+        print("")
+        if pickup.lower() == "yes" and item_to_pickup:
+            for key, value in self.inventory.items():
+                if value == "Empty":
+                    self.inventory[key] = item_to_pickup
+                    print(f"Picked up {item_to_pickup} and added to your bag.\n")
+                    break
+            else:
+                print(colorama.Fore.GREEN)
+                print("No space in inventory to pick up the item.\n")
+        else:
             print(colorama.Fore.GREEN)
-            pickup = input("Would you like to pickup the dropped items?\n")
-            if pickup.lower() == "yes":
-                item_to_pickup = goblin_item_drops.always_dropped(goblin_is_alive)
-                if item_to_pickup:
-                    for key, value in self.inventory.items():
-                        if value == "Empty":
-                            self.inventory[key] = item_to_pickup
-                            print(colorama.Fore.GREEN)
-                            print(f"Picked up {item_to_pickup} and added to your bag.")
-                            break
-                    else:
-                        print(colorama.Fore.GREEN)
-                        print("No space in inventory to pick up the item.")
-                else:
-                    print(colorama.Fore.GREEN)
-                    print("No item to pick up.")
+            print("No item to pick up.\n")
 
     # Nested class for worn equipment
     class Worn_Equipment:
@@ -194,9 +191,11 @@ def Battle():
         if Computer_player.hp <= 0:
             print("Player has defeated Goblin.\n")
             goblin_is_alive_status = Computer_player.goblin_is_alive()
-            goblin_item_drops.always_dropped(goblin_is_alive_status)
-            player_inventory.pickup_item_on_victory(
+            item_to_pickup = goblin_item_drops.always_dropped(
                 goblin_is_alive_status
+            )  # Print the drop message and get the item
+            player_inventory.pickup_item_on_victory(
+                item_to_pickup
             )  # Pick up item if Goblin defeated
             player_inventory.print_inventory()  # Print player's inventory
             return 1
@@ -249,5 +248,3 @@ else:
 print(colorama.Fore.LIGHTYELLOW_EX)
 print(f"Player 1 wins: {Player_player_wins}")
 print(f"NPC wins: {NPC_wins}\n")
-item_behaviors.Bones
-item_behaviors.goblin_always_dropped.examine()

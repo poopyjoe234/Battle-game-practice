@@ -42,7 +42,7 @@ class Player(Player_combat_interface):
     def Player_attack(self, goblin_class):
         while True:
             Deflect_chance = random.randint(0, 99)  # Generate random chance
-            if Deflect_chance > 24:
+            if Deflect_chance > 26.9999999999999986:
                 Opponent_hp = goblin_class.hp - self.attack_damage
                 goblin_class.hp = Opponent_hp
                 return True
@@ -172,7 +172,7 @@ Player_player_wins = 0
 NPC_wins = 0
 
 # Main loop to run the battle; change the integer in the range function for the number of battles
-for i in range(1000000):
+for i in range(100000):
     Computer_player = goblin_class()
     Player_player = Player()
     result = Battle()
