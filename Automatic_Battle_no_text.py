@@ -42,7 +42,7 @@ class Player(Player_combat_interface):
     def Player_attack(self, goblin_class):
         while True:
             Deflect_chance = random.randint(0, 99)  # Generate random chance
-            if Deflect_chance > 26.9999999999999986:
+            if Deflect_chance > 24.05:
                 Opponent_hp = goblin_class.hp - self.attack_damage
                 goblin_class.hp = Opponent_hp
                 return True
@@ -67,23 +67,7 @@ class Player_inventory_interface:
     # Handle item pickup after victory against a goblin
     def pickup_item_on_victory(self, goblin_is_alive):
         if not goblin_is_alive:
-            print(colorama.Fore.GREEN)
-            pickup = input("Would you like to pickup the dropped items?\n")
-            if pickup.lower() == "yes":
-                item_to_pickup = goblin_item_drops.always_dropped(goblin_is_alive)
-                if item_to_pickup:
-                    for key, value in self.inventory.items():
-                        if value == "Empty":
-                            self.inventory[key] = item_to_pickup
-                            print(colorama.Fore.GREEN)
-                            print(f"Picked up {item_to_pickup} and added to your bag.")
-                            break
-                    else:
-                        print(colorama.Fore.GREEN)
-                        print("No space in inventory to pick up the item.")
-                else:
-                    print(colorama.Fore.GREEN)
-                    print("No item to pick up.")
+            pass
 
     # Nested class for worn equipment
     class Worn_Equipment:
@@ -159,20 +143,30 @@ class goblin_class(NPC_combat_interface):
 def Battle():
     # Battle loop, continues until one opponent is defeated
     while True:
-        Player_player.Player_attack(Computer_player)  # Player's attack on Goblin
-        if Computer_player.hp <= 0:
-            return 1
+        # Randomly choose who attacks first
+        first_attack = random.choice(['Player', 'Goblin'])
 
-        Computer_player.goblin_attack(Player_player)
-        if Player_player.hp <= 0:
-            return 2
+        if first_attack == 'Player':
+            Player_player.Player_attack(Computer_player)  # Player's attack on Goblin
+            if Computer_player.hp <= 0:
+                return 1
+            Computer_player.goblin_attack(Player_player)
+            if Player_player.hp <= 0:
+                return 2
+        else:
+            Computer_player.goblin_attack(Player_player)
+            if Player_player.hp <= 0:
+                return 2
+            Player_player.Player_attack(Computer_player)  # Player's attack on Goblin
+            if Computer_player.hp <= 0:
+                return 1
 
 
 Player_player_wins = 0
 NPC_wins = 0
 
 # Main loop to run the battle; change the integer in the range function for the number of battles
-for i in range(100000):
+for i in range(10000):
     Computer_player = goblin_class()
     Player_player = Player()
     result = Battle()

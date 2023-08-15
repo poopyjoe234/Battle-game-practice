@@ -10,3 +10,4 @@ class goblin_drops:
             print(f"Goblin has dropped {always_dropped_item}.")
             print(colorama.Fore.RESET)
             return always_dropped_item
+

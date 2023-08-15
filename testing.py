@@ -161,7 +161,7 @@ class goblin_class(NPC_combat_interface):
             print(f"Computer HP: {Computer_player.hp}\n")
 
     def goblin_hp(self):
-        self.hp = 10  # Set goblin's initial health points
+        self.hp = 1  # Set goblin's initial health points
 
     def goblin_attack_damage(self):
         self.attack_damage = 1  # Set goblin's initial attack damage
@@ -197,7 +197,7 @@ def Battle():
             player_inventory.pickup_item_on_victory(
                 item_to_pickup
             )  # Pick up item if Goblin defeated
-            player_inventory.print_inventory()  # Print player's inventory
+            #player_inventory.print_inventory()  # Print player's inventory
             return 1
         else:
             pass
