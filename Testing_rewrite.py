@@ -1,5 +1,6 @@
 import time
 import random
+import Monster_Drop_Table_Rewrite
 import colorama
 import threading
 
@@ -44,7 +45,7 @@ class Player:
             enemies[2].hp -= incoming_damage
             print("full damage inflicted")
 
-    def Player_is_alive(self):
+    def player_is_alive(self):
         if self.hp >= 1:
             player_is_alive = True
             return player_is_alive
@@ -58,6 +59,9 @@ class Goblin:  # 0 in the tuple
         self.hp = 1
         self.damage = 1
 
+    def __str__(self):
+        return "Goblin"
+
     def is_alive(self):
         if self.hp >= 1:
             is_alive = True
@@ -66,11 +70,19 @@ class Goblin:  # 0 in the tuple
             is_alive = False
             return is_alive
 
+    def drop_on_death(self):
+        death_check = self.is_alive()
+        if not death_check:
+            Monster_Drop_Table_Rewrite.Bones
+
 
 class GiantRat:  # 1 in the tuple
     def __init__(self):
         self.hp = 1
         self.damage = 1
+
+    def __str__(self):
+        return "Giant Rat"
 
     def is_alive(self):
         if self.hp >= 1:
@@ -85,6 +97,9 @@ class Guard:  # 2 in the tuple
     def __init__(self):
         self.hp = 10
         self.damage = 1
+
+    def __str__(self):
+        return "Guard"
 
     def is_alive(self):
         if self.hp >= 1:
@@ -107,6 +122,7 @@ def enemy_attack_player():
         print("full damage inflicted")
 
 
+
 ############
 ############
 ############
@@ -117,12 +133,12 @@ player = Player()
 enemies = (Goblin(), GiantRat(), Guard())
 
 while True:
-    if player.Player_is_alive() == False:
+    if not player.player_is_alive():
         exit()
 
     for index, enemy in enumerate(enemies):
         if not enemies[index].is_alive():
-            print(f"Player has defeated {enemy}")
+            print(f"Player has defeated {enemies[index]}")
             exit()
 
     else:
@@ -132,3 +148,4 @@ while True:
         enemy_attack_player()
         print(player.hp)
         time.sleep(1.25)
+
