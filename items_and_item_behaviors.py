@@ -1,7 +1,7 @@
 
 
 """
-#format for adding items and the super class.
+#format for adding items (similar to bones) and the super class.
 
 class (ITEM NAME)(Items):
     def __init__(self):
@@ -9,6 +9,19 @@ class (ITEM NAME)(Items):
             name="ITEM NAME",
             examine_description="ITEM DESCRIPTION",
 """
+"""
+To add items to a class:
+
+@classmethod
+    def NAME_OF_ITEM(cls):
+        name = "Item name"
+        examine_description = "examine description"
+        damage = damage the item does
+        weapon_type = cls (this will be the same as the parent class)
+        accuracy = (item accuracy)
+        return cls(name, examine_description, damage, weapon_type, accuracy) #add any other args here
+"""
+
 
 class Items:
     def __init__(self, name, examine_description):
@@ -39,9 +52,6 @@ class Bones(Items):
                 pass
 
 
-goblin_always_dropped = Bones()
-
-
 class Helmet(Items):
     pass
 
@@ -65,21 +75,23 @@ class Weapon(Items):
         self.weapon_type = weapon_type
         self.accuracy = accuracy
 
-    def bronze_dagger(self):
-        self.name = "Bronze Dagger"
-        self.examine_description = "A dagger made of bronze."
-        self.damage = 1
-        self.weapon_type = Weapon
-        self.accuracy = None
+    @classmethod
+    def bronze_dagger(cls):
+        name = "Bronze Dagger"
+        examine_description = "A dagger made of bronze."
+        damage = 1
+        weapon_type = cls
+        accuracy = None
+        return cls(name, examine_description, damage, weapon_type, accuracy)
 
-    def bronze_sword(self):
-        self.name = "Bronze Sword"
-        self.examine_description = "A short sword made of bronze."
-        self.damage = 2
-        self.accuracy = None
-
-
-weapons = Weapon.bronze_dagger()
+    @classmethod
+    def bronze_sword(cls):
+        name = "Bronze Sword"
+        examine_description = "A short sword made of bronze."
+        damage = 2
+        weapon_type = cls
+        accuracy = None
+        return cls(name, examine_description, damage, weapon_type, accuracy)
 
 
 class Shield(Items):
@@ -91,18 +103,23 @@ class Shield(Items):
         self.deflection_chance = deflection_chance
         self.drop_chance = drop_chance
 
-    def bronze_square_shield(self):
-        self.name = "Bronze Square shield"
-        self.examine_description = "A square shield made of bronze, it helps block enemy attacks."
-        self.armour_type = Shield
-        self.deflection_chance = 1.
+    @classmethod
+    def bronze_square_shield(cls):
+        name = "Bronze Square shield"
+        examine_description = "A square shield made of bronze, it helps block enemy attacks."
+        armour_type = Shield
+        deflection_chance = 2
+        drop_chance = None
+        return cls(name, examine_description, armour_type, deflection_chance, drop_chance)
 
-    def bronze_kite_shield(self):
-        self.name = "Bronze Square shield"
-        self.examine_description = "A square shield made of bronze, it helps block enemy attacks."
-        self.armour_type = Shield
-        self.deflection_chance = 2
-
+    @classmethod
+    def bronze_kite_shield(cls):
+        name = "Bronze Kite shield"
+        examine_description = "A Kite shield made of bronze, it helps block enemy attacks better than a square shield."
+        armour_type = Shield
+        deflection_chance = 4
+        drop_chance = None
+        return cls(name, examine_description, armour_type, deflection_chance, drop_chance)
 
 
 class BodyArmour(Items):
@@ -119,4 +136,3 @@ class Hands(Items):
 
 class Feet(Items):
     pass
-

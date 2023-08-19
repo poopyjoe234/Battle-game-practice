@@ -1,25 +1,22 @@
-class Item:
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
+import items_and_item_behaviors
 
-    def use(self):
-        pass
+"""
+GOBLIN DROP TABLE
+"""
 
-    def examine(self):
-        print(self.description)
-
-    def drop(self):
-        print(f"You've dropped {self.name}")
+Bones = items_and_item_behaviors.Bones()
+Bronze_Dagger = items_and_item_behaviors.Weapon.bronze_dagger()
+Bronze_Sword = items_and_item_behaviors.Weapon.bronze_sword()
+Bronze_Square_Shield = items_and_item_behaviors.Shield.bronze_square_shield()
+Bronze_Kite_Shield = items_and_item_behaviors.Shield.bronze_kite_shield()
 
 
-class Bones(Item):
-    def __init__(self):
-        super().__init__(name="Bones", description="Bones from an enemy.")
-
-    def use(self):
-        print("You bury the bones.")
-        print("+10 xp")
+"""
+GIANT RAT DROP TABLE
+"""
 
 
-bones = Bones()
+
+"""
+GUARD DROP TABLE
+"""

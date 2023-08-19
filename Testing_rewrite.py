@@ -12,7 +12,6 @@ for target in targets
 for target in targets
 attack(player, targets[X] ; X = target in tuple
 """
-import Player_Class
 
 """
 #to check if enemies are alive
@@ -29,8 +28,6 @@ import colorama
 import threading
 import items_and_item_behaviors
 
-print(items_and_item_behaviors.weapons)
-
 """
 This script is designed for a game where players can interact with multiple NPCs.
 Players can attack NPCs, loot them, and manage their inventory.
@@ -43,7 +40,8 @@ class Player:
     def __init__(self, default_slots=10):
         """Initialize player attributes."""
         self.hp = 10
-        self.damage = 0.5
+        self.damage = 1
+        self.base_deflect_chance = 25
         # Set up a default inventory with empty slots.
         self.inventory = ["Empty" for _ in range(default_slots)]
         self.worn_equipment()
@@ -67,6 +65,33 @@ class Player:
         print("---INVENTORY---")
         for slot_number, item in enumerate(self.inventory, 1):
             print(f"Inventory slot {slot_number}: {item}")
+
+        print("Type //examine (slot number) to examine an item in your inventory.")
+        print("Type //equip (slot number) to equip a weapon or piece of armour.")
+        player_choice = input()
+
+        if player_choice.startswith("//examine"):
+            slot = int(player_choice.split()[1]) - 1
+            if 0 <= slot < len(self.inventory):
+                item = self.inventory[slot]
+                if isinstance(item, items_and_item_behaviors.Items):  # Check if the item is an instance of the Items class
+                    print(f"{item.name}: {item.examine_description}")
+                else:
+                    print("The slot is empty or contains an invalid item.")
+
+        elif player_choice.startswith(f"//equip"):
+            slot = int(player_choice.split()[1]) - 1
+            if 0 <= slot < len(self.inventory):
+                item_to_equip = self.inventory[slot]
+                if isinstance(item_to_equip, items_and_item_behaviors.Shield):
+                    if not self.shield_slot:
+                        self.shield_slot = item_to_equip
+                        self.inventory[slot] = "Empty"
+                        print(f"{item_to_equip.name} has been equipped.")
+
+                    else:
+                        print("Slot is not empty.")
+
 
     def slot_is_empty(self, slot_number):
         """Check if a specific inventory slot is empty."""
@@ -97,6 +122,12 @@ class Player:
         else:
             print("All slots are occupied. Cannot add the item.\n")
 
+    def total_deflect_chance(self):
+        total_chance_of_deflect = self.base_deflect_chance
+        if isinstance(self.shield_slot, items_and_item_behaviors.Shield):
+            total_chance_of_deflect += self.shield_slot.deflection_chance
+        return total_chance_of_deflect
+
     def player_attack_enemies(self):
         """Handle the logic for the player attacking enemies."""
         incoming_damage = self.damage
@@ -105,9 +136,16 @@ class Player:
             print("deflect chance =", deflect_chance, "percent")
             print("Enemy has deflected the attack. (deflect chance =", deflect_chance, "percent)\n")
         else:
-            for enemy in enemies:
-                enemy.hp -= incoming_damage
-            print("full damage inflicted")
+            enemy.hp -= incoming_damage
+            print("deflect chance =", deflect_chance, "percent")
+            print("full damage inflicted to the enemy.\n")
+
+    def full_player_attack(self):
+        print(colorama.Fore.LIGHTYELLOW_EX)
+        self.player_attack_enemies()
+        print("")
+        print("Enemy HP =", enemy.hp)
+        print("")
 
     def player_is_alive(self):
         """Check if the player is still alive."""
@@ -119,7 +157,7 @@ class Goblin:
 
     def __init__(self):
         """Initialize Goblin attributes."""
-        self.hp = 1
+        self.hp = 5
         self.damage = 1
 
     def __str__(self):
@@ -132,13 +170,18 @@ class Goblin:
     def goblin_drop_on_death(self):
         """Handle the logic for the Goblin dropping items upon death."""
         if not self.is_alive():
-            print("Goblin has dropped bones.")
-            pickup = input("Would you like to loot the Goblin? Enter yes or no.\n")
+            print(f"Goblin has dropped {Monster_Drop_Table_Rewrite.Bones.name}.")
+            print(f"Goblin has dropped {Monster_Drop_Table_Rewrite.Bronze_Square_Shield.name}")
+            pickup = input("\nWould you like to loot the Goblin? Enter yes or no.\n")
             if pickup.lower() in ["yes", "y"]:
-                player.add_item_to_first_available_slot(Monster_Drop_Table_Rewrite.bones.name)
-                print(f"The {Monster_Drop_Table_Rewrite.bones.name} have been added to your bag.\n")
+                player.add_item_to_first_available_slot(Monster_Drop_Table_Rewrite.Bones)
+                time.sleep(.1)
+                player.add_item_to_first_available_slot(Monster_Drop_Table_Rewrite.Bronze_Square_Shield)
+                print("")
+                print(f"The {Monster_Drop_Table_Rewrite.Bones.name} have been added to your bag.\n")
+                print(f"The {Monster_Drop_Table_Rewrite.Bronze_Square_Shield.name} have been added to your bag.\n")
             elif pickup.lower() in ["no", "n"]:
-                print(f"You leave the {Monster_Drop_Table_Rewrite.bones.name} on the ground.")
+                print(f"You leave the loot on the ground.")
             else:
                 print("Please enter yes or no.")
                 self.goblin_drop_on_death()
@@ -149,7 +192,7 @@ class GiantRat:
 
     def __init__(self):
         """Initialize Giant Rat attributes."""
-        self.hp = 1
+        self.hp = 11
         self.damage = 1
 
     def __str__(self):
@@ -165,7 +208,7 @@ class Guard:
 
     def __init__(self):
         """Initialize Guard attributes."""
-        self.hp = 10
+        self.hp = 11
         self.damage = 1
 
     def __str__(self):
@@ -175,40 +218,59 @@ class Guard:
         """Check if the Guard is still alive."""
         return self.hp >= 1
 
+
 def enemy_attack_player():
     """Handle the logic for enemies attacking the player."""
-    incoming_damage = enemies[0].damage
-    deflect_chance = random.randint(0, 99)
-    if deflect_chance <= 24:
-        print("Player has deflected the enemy attack. (deflect chance =", deflect_chance, "percent)")
+    incoming_damage = enemy.damage
+    deflect_roll = random.randint(0, 99)
+    if deflect_roll <= player.total_deflect_chance():
+        print("deflect chance =", deflect_roll, "percent")
+        print("Player has deflected the attack. (deflect chance =", deflect_roll, "percent)\n")
     else:
         player.hp -= incoming_damage
-        print("full damage inflicted")
+        print("Player roll:", deflect_roll)
+        print("full damage inflicted to Player.\n")
+
+
+def full_enemy_attack():
+    print(colorama.Fore.RESET)
+    print(colorama.Fore.RED)
+    enemy_attack_player()
+    print("")
+    print(f"Player HP = {player.hp}")
+    print("")
 
 
 player = Player()
-enemies = (Goblin(), GiantRat(), Guard())
+enemy = Goblin()
 
-player.add_item(1, "Shield")
-player.player_inventory()
-loot = items_and_item_behaviors.Items(items_and_item_behaviors.Bones, items_and_item_behaviors.Bones)
 
-# Main game loop
+"""Main game loop"""
 while True:
+    enemy.is_alive()
+    player.full_player_attack()
+    time.sleep(.5)
+    print(colorama.Fore.RESET)
+    player.player_is_alive()
+    full_enemy_attack()
+    time.sleep(.5)
+    print(colorama.Fore.RESET)
+
     if not player.player_is_alive():
+        print("Player has been defeated.")
+        time.sleep(1)
         exit()
 
-    for index, enemy in enumerate(enemies):
-        if not enemy.is_alive():
-            print(f"Player has defeated {enemy}\n")
-            enemy.goblin_drop_on_death()
-            player.player_inventory()
-            items_and_item_behaviors.Bones.examine(items_and_item_behaviors.goblin_always_dropped)
-            exit()
+    # for index, enemy in enumerate(enemies):
+    #     if not enemy.is_alive():
+    #         print(f"Player has defeated {enemy}\n")
+    #         enemy.goblin_drop_on_death()
+    #         player.player_inventory()
+    #         exit()
 
-    player.player_attack_enemies()
-    print([enemy.hp for enemy in enemies])
-    time.sleep(1.25)
-    enemy_attack_player()
-    print(f"Player HP = {player.hp}")
-    time.sleep(1.25)
+    if not enemy.is_alive():
+        time.sleep(1)
+        print(colorama.Fore.LIGHTGREEN_EX)
+        print(f"Player has defeated {enemy}\n")
+        enemy.goblin_drop_on_death()
+        break
