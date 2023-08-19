@@ -2,7 +2,7 @@ import time
 import random
 import colorama
 import Monster_Drop_Table
-import item_behaviors
+import items_and_item_behaviors
 
 
 # Base class for defining common combat attributes for players
@@ -193,7 +193,7 @@ def Battle():
             goblin_is_alive_status = Computer_player.goblin_is_alive()
             item_to_pickup = goblin_item_drops.always_dropped(
                 goblin_is_alive_status
-            )  # Print the drop message and get the item
+            )  # Print the bones message and get the item
             player_inventory.pickup_item_on_victory(
                 item_to_pickup
             )  # Pick up item if Goblin defeated

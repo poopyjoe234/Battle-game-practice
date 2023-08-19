@@ -2,7 +2,7 @@ import time
 import random
 import colorama
 import Monster_Drop_Table
-import item_behaviors
+import items_and_item_behaviors
 
 
 # Base class for defining common combat attributes for players
