@@ -60,14 +60,92 @@ class Player:
         self.hands_slot = None
         self.feet_slot = None
 
+    def print_worn_equipment(self):
+        print(colorama.Fore.LIGHTWHITE_EX)
+        worn_equipment = [
+            ("Head", self.head_slot),
+            ("Cape", self.cape_slot),
+            ("Neck", self.neck_slot),
+            ("Ammo", self.ammunition_slot),
+            ("Weapon", self.weapon_slot),
+            ("Shield", self.shield_slot),
+            ("Two-handed", self.two_handed_slot),
+            ("Body", self.body_slot),
+            ("Legs", self.legs_slot),
+            ("Hands", self.hands_slot),
+            ("Feet", self.feet_slot)
+        ]
+
+        for slot_name, slot_item in worn_equipment:
+            if slot_item:
+                print(f"{slot_name}: {str(slot_item)}")
+            else:
+                print(f"{slot_name}: Empty")
+
+    def unequip_item(self, equipment_type):
+        """Unequip an item and move it to the inventory."""
+
+        equipment_directory = [
+            ("Head", self.head_slot),
+            ("Cape", self.cape_slot),
+            ("Neck", self.neck_slot),
+            ("Ammo", self.ammunition_slot),
+            ("Weapon", self.weapon_slot),
+            ("Shield", self.shield_slot),
+            ("Two-handed", self.two_handed_slot),
+            ("Body", self.body_slot),
+            ("Legs", self.legs_slot),
+            ("Hands", self.hands_slot),
+            ("Feet", self.feet_slot)
+        ]
+
+        for slot_name, slot_item in equipment_directory:
+            if slot_name.lower() == equipment_type.lower():
+                if slot_item:
+                    available_slot = self.first_empty_slot()
+                    if available_slot:
+                        self.add_item(available_slot, slot_item)
+                        if slot_name == "Head":
+                            self.head_slot = None
+                        elif slot_name == "Cape":
+                            self.cape_slot = None
+                        elif slot_name == "Neck":
+                            self.neck_slot = None
+                        elif slot_name == "Ammo":
+                            self.ammunition_slot = None
+                        elif slot_name == "Weapon":
+                            self.weapon_slot = None
+                        elif slot_name == "Shield":
+                            self.shield_slot = None
+                        elif slot_name == "Two-handed":
+                            self.two_handed_slot = None
+                        elif slot_name == "Body":
+                            self.body_slot = None
+                        elif slot_name == "Hands":
+                            self.hands_slot = None
+                        elif slot_name == "Feet":
+                            self.feet_slot = None
+
+                        print(f"{slot_item.name} has been unequipped and added to your inventory.")
+                        break
+                    else:
+                        print("Your inventory is full. You cannot unequip the item.")
+                else:
+                    print(f"There is no item equipped in the {slot_name} slot")
+                break
+
+
+
     def player_inventory(self):
-        """Display the current contents of the player's inventory."""
+        """Display the current contents of the players inventory."""
         print("---INVENTORY---")
         for slot_number, item in enumerate(self.inventory, 1):
             print(f"Inventory slot {slot_number}: {item}")
 
         print("Type //examine (slot number) to examine an item in your inventory.")
         print("Type //equip (slot number) to equip a weapon or piece of armour.")
+        print("Type //equipment to print worn equipment.")
+        print("Type //unequip (equipment slot) to unequip a weapon or piece of armour.")
         player_choice = input()
 
         if player_choice.startswith("//examine"):
@@ -79,18 +157,34 @@ class Player:
                 else:
                     print("The slot is empty or contains an invalid item.")
 
-        elif player_choice.startswith(f"//equip"):
-            slot = int(player_choice.split()[1]) - 1
-            if 0 <= slot < len(self.inventory):
-                item_to_equip = self.inventory[slot]
-                if isinstance(item_to_equip, items_and_item_behaviors.Shield):
-                    if not self.shield_slot:
-                        self.shield_slot = item_to_equip
-                        self.inventory[slot] = "Empty"
-                        print(f"{item_to_equip.name} has been equipped.")
+        if player_choice.startswith(f"//equip"):
+            parts = player_choice.split()
+            if len(parts) > 1:
+                slot = int(parts[1]) - 1
+                if 0 <= slot < len(self.inventory):
+                    item_to_equip = self.inventory[slot]
+                    if item_to_equip == "Empty":
+                        print("There's nothing in this slot to equip.")
+                        return
 
+                    if hasattr(item_to_equip, "armour_type"):
+                        if item_to_equip.armour_type == "Shield" and not self.shield_slot:
+                            self.shield_slot = item_to_equip
+                            self.inventory[slot] = "Empty"
+                            print(f"{item_to_equip.name} has been equipped.\n")
                     else:
-                        print("Slot is not empty.")
+                        print("The item in this slow cannot be equipped.")
+                else:
+                    print("Slot number is invalid.")
+
+        if player_choice.lower() == "//equipment":
+            self.print_worn_equipment()
+
+        elif player_choice.startswith(f"//unequip"):
+            equipment_slot = player_choice.split()[1].lower()
+            self.unequip_item(equipment_slot.lower())
+
+
 
 
     def slot_is_empty(self, slot_number):
@@ -157,7 +251,7 @@ class Goblin:
 
     def __init__(self):
         """Initialize Goblin attributes."""
-        self.hp = 5
+        self.hp = 1
         self.damage = 1
 
     def __str__(self):
@@ -246,20 +340,39 @@ enemy = Goblin()
 
 
 """Main game loop"""
+
 while True:
-    enemy.is_alive()
-    player.full_player_attack()
-    time.sleep(.5)
-    print(colorama.Fore.RESET)
-    player.player_is_alive()
-    full_enemy_attack()
-    time.sleep(.5)
-    print(colorama.Fore.RESET)
+
+    if enemy.is_alive():
+        player.full_player_attack()
+        enemy.is_alive()
+        time.sleep(.5)
+        print(colorama.Fore.RESET)
+
+    if not enemy.is_alive():
+        time.sleep(1)
+        print(colorama.Fore.LIGHTGREEN_EX)
+        print(f"Player has defeated {enemy}\n")
+        enemy.goblin_drop_on_death()
+        player.player_inventory()
+        player.print_worn_equipment()
+        player.player_inventory()
+        player.print_worn_equipment()
+        player.player_inventory()
+
+        print(colorama.Fore.RESET)
+        break
+
+    if player.player_is_alive():
+        full_enemy_attack()
+        player.player_is_alive()
+        time.sleep(.5)
+        print(colorama.Fore.RESET)
 
     if not player.player_is_alive():
         print("Player has been defeated.")
         time.sleep(1)
-        exit()
+        break
 
     # for index, enemy in enumerate(enemies):
     #     if not enemy.is_alive():
@@ -268,9 +381,4 @@ while True:
     #         player.player_inventory()
     #         exit()
 
-    if not enemy.is_alive():
-        time.sleep(1)
-        print(colorama.Fore.LIGHTGREEN_EX)
-        print(f"Player has defeated {enemy}\n")
-        enemy.goblin_drop_on_death()
-        break
+
