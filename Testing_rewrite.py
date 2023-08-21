@@ -12,6 +12,7 @@ for target in targets
 for target in targets
 attack(player, targets[X] ; X = target in tuple
 """
+import freespacetocode
 
 """
 #to check if enemies are alive
@@ -146,18 +147,28 @@ class Player:
         print("Type //equip (slot number) to equip a weapon or piece of armour.")
         print("Type //equipment to print worn equipment.")
         print("Type //unequip (equipment slot) to unequip a weapon or piece of armour.")
+        print("Type //drop (slot number) to unequip a weapon or piece of armour.")
         player_choice = input()
 
         if player_choice.startswith("//examine"):
-            slot = int(player_choice.split()[1]) - 1
-            if 0 <= slot < len(self.inventory):
-                item = self.inventory[slot]
-                if isinstance(item, items_and_item_behaviors.Items):  # Check if the item is an instance of the Items class
-                    print(f"{item.name}: {item.examine_description}")
+            parts = player_choice.split()
+            if len(parts) > 1:
+                slot = int(player_choice.split()[1]) - 1
+                if 0 <= slot < len(self.inventory):
+                    item = self.inventory[slot]
+                    if isinstance(item, items_and_item_behaviors.Items):  # Check if the item is an instance of the Items class
+                        print(f"{item.name}: {item.examine_description}")
+                    else:
+                        print("The slot is empty or contains an invalid item.")
                 else:
-                    print("The slot is empty or contains an invalid item.")
+                    print("Enter a valid slot number.")
+            else:
+                print("Please enter a slot number after //examine")
 
-        if player_choice.startswith(f"//equip"):
+        if player_choice.lower() == "//equipment":
+                self.print_worn_equipment()
+
+        elif player_choice.startswith(f"//equip"):
             parts = player_choice.split()
             if len(parts) > 1:
                 slot = int(parts[1]) - 1
@@ -172,20 +183,39 @@ class Player:
                             self.shield_slot = item_to_equip
                             self.inventory[slot] = "Empty"
                             print(f"{item_to_equip.name} has been equipped.\n")
+
+                    if hasattr(item_to_equip, "weapon_type"):
+                        if item_to_equip.weapon_type == "Weapon" and not self.weapon_slot:
+                            self.weapon_slot = item_to_equip
+                            self.inventory[slot] = "Empty"
+                            print(f"{item_to_equip.name} has been equipped.\n")
+
                     else:
-                        print("The item in this slow cannot be equipped.")
+                        print("The item in this slot cannot be equipped.")
                 else:
                     print("Slot number is invalid.")
-
-        if player_choice.lower() == "//equipment":
-            self.print_worn_equipment()
+            else:
+                print("Slot number is invalid.")
 
         elif player_choice.startswith(f"//unequip"):
-            equipment_slot = player_choice.split()[1].lower()
-            self.unequip_item(equipment_slot.lower())
+            parts = player_choice.split()
+            if len(parts) > 1:
+                equipment_slot = player_choice.split()[1].lower()
+                self.unequip_item(equipment_slot.lower())
+            else:
+                print("Please enter an item slot to unequip that item.")
 
-
-
+        elif player_choice.startswith(f"//drop"):
+            parts = player_choice.split()
+            if len(parts) > 1:
+                slot = int(parts[1]) - 1
+                if 0 <= slot < len(self.inventory):
+                    dropped_item = self.inventory[slot]
+                    if dropped_item != "Empty":
+                        print(f"You have dropped {dropped_item}.")
+                        self.inventory[slot] = "Empty"
+                    else:
+                        print("There's nothing in this slot to drop.")
 
     def slot_is_empty(self, slot_number):
         """Check if a specific inventory slot is empty."""
@@ -253,6 +283,7 @@ class Goblin:
         """Initialize Goblin attributes."""
         self.hp = 1
         self.damage = 1
+        self.loot = []
 
     def __str__(self):
         return "Goblin"
@@ -261,24 +292,68 @@ class Goblin:
         """Check if the Goblin is still alive."""
         return self.hp >= 1
 
+
     def goblin_drop_on_death(self):
         """Handle the logic for the Goblin dropping items upon death."""
         if not self.is_alive():
-            print(f"Goblin has dropped {Monster_Drop_Table_Rewrite.Bones.name}.")
-            print(f"Goblin has dropped {Monster_Drop_Table_Rewrite.Bronze_Square_Shield.name}")
-            pickup = input("\nWould you like to loot the Goblin? Enter yes or no.\n")
-            if pickup.lower() in ["yes", "y"]:
-                player.add_item_to_first_available_slot(Monster_Drop_Table_Rewrite.Bones)
-                time.sleep(.1)
-                player.add_item_to_first_available_slot(Monster_Drop_Table_Rewrite.Bronze_Square_Shield)
-                print("")
-                print(f"The {Monster_Drop_Table_Rewrite.Bones.name} have been added to your bag.\n")
-                print(f"The {Monster_Drop_Table_Rewrite.Bronze_Square_Shield.name} have been added to your bag.\n")
-            elif pickup.lower() in ["no", "n"]:
-                print(f"You leave the loot on the ground.")
-            else:
-                print("Please enter yes or no.")
-                self.goblin_drop_on_death()
+            self.loot = self.goblin_loot_chance()
+            while True:
+                pickup = input("\nWould you like to loot the Goblin? Enter yes or no.\n")
+                if pickup.lower() in ["yes", "y"]:
+                    for item in self.loot:
+                        player.add_item_to_first_available_slot(item)
+                    break
+                # print(f"The {Monster_Drop_Table_Rewrite.Bones.name} have been added to your bag.\n")
+                # print(f"The {Monster_Drop_Table_Rewrite.Bronze_Square_Shield.name} have been added to your bag.\n")
+                elif pickup.lower() in ["no", "n"]:
+                    print(f"You leave the loot on the ground.")
+                    break
+                else:
+                    print("Please enter yes or no.")
+
+
+    def goblin_loot_chance(self):
+
+        loot = []
+
+        bones = Monster_Drop_Table_Rewrite.bones_odds()
+        if bones == "drop":
+            loot.append(Monster_Drop_Table_Rewrite.Bones)
+
+        dagger = Monster_Drop_Table_Rewrite.bronze_dagger_odds()
+        if dagger.lower() == "drop":
+            loot.append(Monster_Drop_Table_Rewrite.Bronze_Dagger)
+
+        shield = Monster_Drop_Table_Rewrite.bronze_square_shield()
+        if shield == "drop":
+            loot.append(Monster_Drop_Table_Rewrite.Bronze_Square_Shield)
+
+        return loot
+
+
+    # def goblin_drop_on_death(self):
+    #     """Handle the logic for the Goblin dropping items upon death."""
+    #     if not self.is_alive():
+    #         bones_drop = Monster_Drop_Table_Rewrite.bones_odds()
+    #         shield_drop = Monster_Drop_Table_Rewrite.bronze_square_shield()
+    #         if shield_drop == "drop":
+    #             print(f"Goblin has dropped {Monster_Drop_Table_Rewrite.Bronze_Square_Shield.name}")
+    #         if bones_drop == "drop":
+    #             print(f"Goblin has dropped {Monster_Drop_Table_Rewrite.Bones.name}.")
+    #         pickup = input("\nWould you like to loot the Goblin? Enter yes or no.\n")
+    #         if pickup.lower() in ["yes", "y"]:
+    #             player.add_item_to_first_available_slot(Monster_Drop_Table_Rewrite.Bones)
+    #             time.sleep(.1)"
+                # player.add_item_to_first_available_slot(Monster_Drop_Table_Rewrite.Bronze_Square_Shield)
+                # print("")
+                # print(f"The {Monster_Drop_Table_Rewrite.Bones.name} have been added to your bag.\n")
+                # print(f"The {Monster_Drop_Table_Rewrite.Bronze_Square_Shield.name} have been added to your bag.\n")
+
+            # elif pickup.lower() in ["no", "n"]:
+            #     print(f"You leave the loot on the ground.")
+            # else:
+            #     print("Please enter yes or no.")
+            #     self.goblin_drop_on_death()
 
 
 class GiantRat:
@@ -356,10 +431,6 @@ while True:
         enemy.goblin_drop_on_death()
         player.player_inventory()
         player.print_worn_equipment()
-        player.player_inventory()
-        player.print_worn_equipment()
-        player.player_inventory()
-
         print(colorama.Fore.RESET)
         break
 
@@ -374,7 +445,14 @@ while True:
         time.sleep(1)
         break
 
-    # for index, enemy in enumerate(enemies):
+    if not enemy.is_alive():
+        print(f"Player has defeated {enemy}\n")
+        enemy.goblin_drop_on_death()
+        player.player_inventory()
+        exit()
+
+
+    # for index, enemy in enumerate(enemy):
     #     if not enemy.is_alive():
     #         print(f"Player has defeated {enemy}\n")
     #         enemy.goblin_drop_on_death()
