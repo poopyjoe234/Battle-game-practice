@@ -41,7 +41,9 @@ class Player:
     def __init__(self, default_slots=10):
         """Initialize player attributes."""
         self.hp = 10
-        self.damage = 1
+        self.base_damage = 1
+        self.added_damage = 0
+        self.damage = self.base_damage + self.added_damage
         self.base_deflect_chance = 25
         # Set up a default inventory with empty slots.
         self.inventory = ["Empty" for _ in range(default_slots)]
@@ -166,7 +168,7 @@ class Player:
                 print("Please enter a slot number after //examine")
 
         if player_choice.lower() == "//equipment":
-                self.print_worn_equipment()
+            self.print_worn_equipment()
 
         elif player_choice.startswith(f"//equip"):
             parts = player_choice.split()

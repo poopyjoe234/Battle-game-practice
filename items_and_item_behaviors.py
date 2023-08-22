@@ -9,6 +9,7 @@ class (ITEM NAME)(Items):
             name="ITEM NAME",
             examine_description="ITEM DESCRIPTION",
 """
+
 """
 To add items to a class:
 
@@ -99,10 +100,10 @@ class Weapon(Items):
     def bronze_sword(cls):
         name = "Bronze Sword"
         examine_description = "A short sword made of bronze."
-        damage = 2
+        weapon_damage = 2
         weapon_type = "Weapon"
         accuracy = None
-        return cls(name, examine_description, damage, weapon_type, accuracy)
+        return cls(name, examine_description, weapon_damage, weapon_type, accuracy)
 
 
 class Shield(Items):
