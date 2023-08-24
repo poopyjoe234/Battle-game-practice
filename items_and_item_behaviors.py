@@ -29,6 +29,7 @@ class Items:
         self.name = name
         self.examine_description = examine_description
 
+
     def __str__(self):
         return self.name
 
@@ -91,10 +92,10 @@ class Weapon(Items):
     def bronze_dagger(cls):
         name = "Bronze Dagger"
         examine_description = "A dagger made of bronze."
-        damage = 1
+        weapon_damage = 1
         weapon_type = "Weapon"
         accuracy = None
-        return cls(name, examine_description, damage, weapon_type, accuracy)
+        return cls(name, examine_description, weapon_damage, weapon_type, accuracy)
 
     @classmethod
     def bronze_sword(cls):
@@ -112,8 +113,8 @@ class Shield(Items):
         self.name = name
         self.examine_description = examine_description
         self.armour_type = armour_type
-        self.deflection_chance = deflection_chance
         self.drop_chance = drop_chance
+        self.deflection_chance = deflection_chance
 
     def __str__(self):
         return self.name
@@ -123,18 +124,18 @@ class Shield(Items):
         name = "Bronze Square shield"
         examine_description = "A square shield made of bronze, it helps block enemy attacks."
         armour_type = "Shield"
-        deflection_chance = 2
+        added_deflection_chance = 2
         drop_chance = None
-        return cls(name, examine_description, armour_type, deflection_chance, drop_chance)
+        return cls(name, examine_description, armour_type, added_deflection_chance, drop_chance)
 
     @classmethod
     def bronze_kite_shield(cls):
         name = "Bronze Kite shield"
         examine_description = "A Kite shield made of bronze, it helps block enemy attacks better than a square shield."
         armour_type = "Shield"
-        deflection_chance = 4
+        added_deflection_chance = 4
         drop_chance = None
-        return cls(name, examine_description, armour_type, deflection_chance, drop_chance)
+        return cls(name, examine_description, armour_type, added_deflection_chance, drop_chance)
 
 
 class BodyArmour(Items):
