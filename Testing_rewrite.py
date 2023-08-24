@@ -35,24 +35,25 @@ Players can attack NPCs, loot them, and manage their inventory.
 """
 
 
+# Define the Player class representing the player character
 class Player:
     """This class represents the player character in the game."""
 
+    # Initialize player attributes
     def __init__(self, default_slots=10):
-        """Initialize player attributes."""
-        self.hp = 10
-        self.base_damage = 1
-        self.added_damage = 0
-        self.damage = self.base_damage + self.added_damage
-        self.base_deflect_chance = 25
-        self.added_deflect_chance = 0
-        self.deflect_chance = self.base_deflect_chance + self.added_deflect_chance
-        # Set up a default inventory with empty slots.
+        self.hp = 10  # Player's health points
+        self.base_damage = 1  # Base damage without equipment
+        self.added_damage = 0  # Additional damage from equipped items
+        self.damage = self.base_damage + self.added_damage  # Total damage
+        self.base_deflect_chance = 25  # Base chance to deflect attacks
+        self.added_deflect_chance = 0  # Additional deflect chance from items
+        self.deflect_chance = self.base_deflect_chance + self.added_deflect_chance  # Total deflect chance
+        # Set up a default inventory with empty slots
         self.inventory = ["Empty" for _ in range(default_slots)]
-        self.worn_equipment()
+        self.worn_equipment()  # Initialize worn equipment slots
 
+    # Define equipment slots for the player
     def worn_equipment(self):
-        """Define the slots for equipment that can be worn."""
         self.head_slot = None
         self.cape_slot = None
         self.neck_slot = None
@@ -65,6 +66,7 @@ class Player:
         self.hands_slot = None
         self.feet_slot = None
 
+    # Print the items currently equipped by the player
     def print_worn_equipment(self):
         print(colorama.Fore.LIGHTWHITE_EX)
         worn_equipment = [
@@ -81,53 +83,36 @@ class Player:
             ("Feet", self.feet_slot)
         ]
 
+        # Print equipped items or indicate if slot is empty
         for slot_name, slot_item in worn_equipment:
             if slot_item:
                 print(f"{slot_name}: {str(slot_item)}")
             else:
                 print(f"{slot_name}: Empty")
 
+    # Unequip an item and move it to the inventory
     def unequip_item(self, equipment_type):
-        """Unequip an item and move it to the inventory."""
-
         equipment_directory = [
             ("Head", self.head_slot),
             ("Cape", self.cape_slot),
-            ("Neck", self.neck_slot),
-            ("Ammo", self.ammunition_slot),
-            ("Weapon", self.weapon_slot),
-            ("Shield", self.shield_slot),
-            ("Two-handed", self.two_handed_slot),
-            ("Body", self.body_slot),
-            ("Legs", self.legs_slot),
-            ("Hands", self.hands_slot),
+            # ...
             ("Feet", self.feet_slot)
         ]
 
+        # Check if the requested equipment slot has an item equipped
         for slot_name, slot_item in equipment_directory:
             if slot_name.lower() == equipment_type.lower():
                 if slot_item:
+                    # Find an empty slot in inventory to move unequipped item
                     available_slot = self.first_empty_slot()
                     if available_slot:
                         self.add_item(available_slot, slot_item)
+                        # Reset equipment slot after unequipping
                         if slot_name == "Head":
                             self.head_slot = None
                         elif slot_name == "Cape":
                             self.cape_slot = None
-                        elif slot_name == "Neck":
-                            self.neck_slot = None
-                        elif slot_name == "Ammo":
-                            self.ammunition_slot = None
-                        elif slot_name == "Weapon":
-                            self.weapon_slot = None
-                        elif slot_name == "Shield":
-                            self.shield_slot = None
-                        elif slot_name == "Two-handed":
-                            self.two_handed_slot = None
-                        elif slot_name == "Body":
-                            self.body_slot = None
-                        elif slot_name == "Hands":
-                            self.hands_slot = None
+                        # ...
                         elif slot_name == "Feet":
                             self.feet_slot = None
 
@@ -139,21 +124,22 @@ class Player:
                     print(f"There is no item equipped in the {slot_name} slot")
                 break
 
-
+    # Equip an item and adjust player attributes accordingly
     def equip(self, item):
-        """Equip an item."""
         if isinstance(item, items_and_item_behaviors.Weapon):
+            # Increase damage with equipped weapon
             self.added_damage += item.damage
             self.damage = self.base_damage + self.added_damage
-            self.weapon_slot = item
+            self.weapon_slot = item  # Equip the weapon
             print(f"Damage increased by {item.damage}.")
             print(f"Damage is now {player.damage}")
 
         if isinstance(item, items_and_item_behaviors.Shield):
+            # Increase deflect chance with equipped shield
             self.added_deflect_chance = item.deflection_chance
             self.base_deflect_chance += self.added_deflect_chance
             self.total_deflect_chance = self.base_deflect_chance + self.added_deflect_chance
-            self.shield_slot = item
+            self.shield_slot = item  # Equip the shield
             print(f"Deflection chance is now {item.deflection_chance}.")
 
     def unequip_item(self, equipment_type):
@@ -187,13 +173,16 @@ class Player:
 
     def extra_inventory_choice(self):
         print("Would you like to do anything else in the inventory before moving on?")
-        player_choice = input("Enter 'yes' or 'no'.")
+        player_choice = input("Press Enter to continue fighting or 'yes' to do more in your inventory.\n")
         yes_options = ["yes", "y"]
-        no_options = ["no", "n"]
+        no_options = [""]
         if player_choice.lower() in yes_options:
             self.player_inventory()
         elif player_choice.lower() in no_options:
-
+            pass
+        else:
+            print("Please make your choice.")
+            self.extra_inventory_choice()
 
     def player_invent_main_chunk(self, player_choice):
         if player_choice.startswith("//examine"):
@@ -238,8 +227,8 @@ class Player:
                             self.inventory[slot] = "Empty"
                             print(f"{item_to_equip.name} has been equipped.\n")
 
-                    else:
-                        print("The item in this slot cannot be equipped.")
+                        else:
+                            print("The item in this slot cannot be equipped.")
                 else:
                     print("Slot number is invalid.")
             else:
@@ -271,7 +260,7 @@ class Player:
             player_choice = self.invent_main_menu()
             self.player_invent_main_chunk(player_choice)
             self.extra_inventory_choice()
-
+            break
 
     def slot_is_empty(self, slot_number):
         """Check if a specific inventory slot is empty."""
@@ -333,7 +322,7 @@ class Goblin:
 
     def __init__(self):
         """Initialize Goblin attributes."""
-        self.hp = 5
+        self.hp = 10
         self.damage = 1
         self.loot = []
 
@@ -369,7 +358,7 @@ class Goblin:
 
         bones = Monster_Drop_Table_Rewrite.bones_odds()
         if bones == "drop":
-            loot.append(Monster_Drop_Table_Rewrite.Bones)
+            loot.append(Monster_Drop_Table_Rewrite.Bones.name)
 
         dagger = Monster_Drop_Table_Rewrite.bronze_dagger_odds()
         if dagger.lower() == "drop":
@@ -502,5 +491,6 @@ def game_loop():
         main_game_loop()
         player.hp = 10
         enemy.hp = 5
+
 
 game_loop()

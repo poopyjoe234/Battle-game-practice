@@ -24,25 +24,23 @@ To add items to a class:
 """
 
 
-class Items:
-    def __init__(self, name, examine_description):
-        self.name = name
-        self.examine_description = examine_description
+# class Items:
+#     def __init__(self, name, examine_description):
+#         self.name = name
+#         self.examine_description = examine_description
+#
+#
+#     def __str__(self):
+#         return self.name
+#
+#     def drop(self):
+#         print(f"You have dropped the {self.name} from your inventory.")
 
 
-    def __str__(self):
-        return self.name
-
-    def drop(self):
-        print(f"You have dropped the {self.name} from your inventory.")
-
-
-class Bones(Items):
+class Bones:
     def __init__(self):
-        super().__init__(
-            name="Bones",
-            examine_description="Bones from an enemy. If they were yours, you would be dead.",
-        )
+        self.name = "Bones"
+        self.examine_description = "Bones from an enemy. If they were yours, you would be dead."
 
     def examine(self):
         while True:
@@ -54,33 +52,44 @@ class Bones(Items):
                 pass
 
 
-class Helmet(Items):
+class Consumables:
+    def __init__(self):
+        self.name = "Health Potion",
+        self.examine_description = "Drinking this will give you more health!"
+
+
+   # def use_hp_pot(self):
+
+
+
+class Helmet:
     def __str__(self):
         return self.name
     pass
 
 
-class Cape(Items):
+class Cape:
     def __str__(self):
         return self.name
     pass
 
 
-class NeckArmour(Items):
+class NeckArmour:
     def __str__(self):
         return self.name
     pass
 
 
-class Ammo(Items):
+class Ammo:
     def __str__(self):
         return self.name
     pass
 
 
-class Weapon(Items):
+class Weapon:
     def __init__(self, name, examine_description, damage, weapon_type, accuracy):
-        super().__init__(name, examine_description)
+        self.name = name
+        self.examine_description = examine_description
         self.damage = damage
         self.weapon_type = weapon_type
         self.accuracy = accuracy
@@ -107,9 +116,8 @@ class Weapon(Items):
         return cls(name, examine_description, weapon_damage, weapon_type, accuracy)
 
 
-class Shield(Items):
+class Shield:
     def __init__(self, name, examine_description, armour_type, deflection_chance, drop_chance):
-        super().__init__(name, examine_description)
         self.name = name
         self.examine_description = examine_description
         self.armour_type = armour_type
@@ -138,25 +146,25 @@ class Shield(Items):
         return cls(name, examine_description, armour_type, added_deflection_chance, drop_chance)
 
 
-class BodyArmour(Items):
+class BodyArmour:
     def __str__(self):
         return self.name
     pass
 
 
-class LegArmour(Items):
+class LegArmour:
     def __str__(self):
         return self.name
     pass
 
 
-class Hands(Items):
+class Hands:
     def __str__(self):
         return self.name
     pass
 
 
-class Feet(Items):
+class Feet:
     def __str__(self):
         return self.name
     pass
