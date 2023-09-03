@@ -2,14 +2,6 @@ import random
 
 import items_and_item_behaviors
 
-"""
-GOBLIN DROP TABLE
-"""
-Bones = items_and_item_behaviors.Bones()
-Bronze_Dagger = items_and_item_behaviors.Weapon.bronze_dagger()
-Bronze_Sword = items_and_item_behaviors.Weapon.bronze_sword()
-Bronze_Square_Shield = items_and_item_behaviors.Shield.bronze_square_shield()
-Bronze_Kite_Shield = items_and_item_behaviors.Shield.bronze_kite_shield()
 
 """ Drop rates """
 
@@ -64,13 +56,25 @@ def bronze_square_shield():
         return "not dropped"
 
 
+"""
+GOBLIN DROP TABLE
+"""
+Bones_goblin = items_and_item_behaviors.Bones()
+Bronze_Dagger_goblin = items_and_item_behaviors.Weapon.bronze_dagger()
+Bronze_Sword_goblin = items_and_item_behaviors.Weapon.bronze_sword()
+Bronze_Square_Shield_goblin = items_and_item_behaviors.Shield.bronze_square_shield()
+Bronze_Kite_Shield_goblin = items_and_item_behaviors.Shield.bronze_kite_shield()
 
 """
 GIANT RAT DROP TABLE
 """
-
+Bones_rat = items_and_item_behaviors.Bones()
+Bronze_Square_Shield_rat = items_and_item_behaviors.Shield.bronze_square_shield()
 
 
 """
 GUARD DROP TABLE
 """
+
+Bones_guard = items_and_item_behaviors.Bones()
+Bronze_Kite_Shield_guard = items_and_item_behaviors.Shield.bronze_kite_shield()

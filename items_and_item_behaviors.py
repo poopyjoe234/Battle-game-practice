@@ -23,24 +23,26 @@ To add items to a class:
         return cls(name, examine_description, damage, weapon_type, accuracy) #add any other args here
 """
 
-
-# class Items:
-#     def __init__(self, name, examine_description):
-#         self.name = name
-#         self.examine_description = examine_description
-#
-#
-#     def __str__(self):
-#         return self.name
-#
-#     def drop(self):
-#         print(f"You have dropped the {self.name} from your inventory.")
+"""ITEMS"""
 
 
-class Bones:
+class Items:
+    def __init__(self, name, examine_description):
+        self.name = name
+        self.examine_description = examine_description
+
+    def __str__(self):
+        return self.name
+
+
+class Bones(Items):
     def __init__(self):
-        self.name = "Bones"
-        self.examine_description = "Bones from an enemy. If they were yours, you would be dead."
+        super().__init__(
+        name="Bones",
+        examine_description="Bones from an enemy. If they were yours, you would be dead.",
+        )
+
+
 
     def examine(self):
         while True:
@@ -52,44 +54,106 @@ class Bones:
                 pass
 
 
+"""CONSUMABLES"""
+
+
 class Consumables:
-    def __init__(self):
-        self.name = "Health Potion",
-        self.examine_description = "Drinking this will give you more health!"
-
-
-   # def use_hp_pot(self):
-
-
-
-class Helmet:
-    def __str__(self):
-        return self.name
-    pass
-
-
-class Cape:
-    def __str__(self):
-        return self.name
-    pass
-
-
-class NeckArmour:
-    def __str__(self):
-        return self.name
-    pass
-
-
-class Ammo:
-    def __str__(self):
-        return self.name
-    pass
-
-
-class Weapon:
-    def __init__(self, name, examine_description, damage, weapon_type, accuracy):
+    def __init__(self, name, examine_description):
         self.name = name
         self.examine_description = examine_description
+
+    def __str__(self):
+        return self.name
+
+
+"""ARMOUR & EQUIPMENT"""
+
+
+class Helmet(Items):
+    def __str__(self):
+        return self.name
+    pass
+
+
+class Cape(Items):
+    def __str__(self):
+        return self.name
+    pass
+
+
+class NeckArmour(Items):
+    def __str__(self):
+        return self.name
+    pass
+
+
+class Ammo(Items):
+    def __str__(self):
+        return self.name
+    pass
+
+
+class Shield(Items):
+    def __init__(self, name, examine_description, armour_type, deflection_chance, drop_chance):
+        super().__init__(name, examine_description)
+        self.name = name
+        self.examine_description = examine_description
+        self.armour_type = armour_type
+        self.drop_chance = drop_chance
+        self.deflection_chance = deflection_chance
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def bronze_square_shield(cls):
+        name = "Bronze Square shield"
+        examine_description = "A square shield made of bronze, it helps block enemy attacks."
+        armour_type = "Shield"
+        added_deflection_chance = abs(1)
+        drop_chance = None
+        return cls(name, examine_description, armour_type, added_deflection_chance, drop_chance)
+
+    @classmethod
+    def bronze_kite_shield(cls):
+        name = "Bronze Kite shield"
+        examine_description = "A Kite shield made of bronze, it helps block enemy attacks better than a square shield."
+        armour_type = "Shield"
+        added_deflection_chance = abs(4)
+        drop_chance = None
+        return cls(name, examine_description, armour_type, added_deflection_chance, drop_chance)
+
+
+class BodyArmour(Items):
+    def __str__(self):
+        return self.name
+    pass
+
+
+class LegArmour(Items):
+    def __str__(self):
+        return self.name
+    pass
+
+
+class Hands(Items):
+    def __str__(self):
+        return self.name
+    pass
+
+
+class Feet(Items):
+    def __str__(self):
+        return self.name
+    pass
+
+
+"""WEAPONS"""
+
+
+class Weapon(Items):
+    def __init__(self, name, examine_description, damage, weapon_type, accuracy):
+        super().__init__(name, examine_description)
         self.damage = damage
         self.weapon_type = weapon_type
         self.accuracy = accuracy
@@ -114,57 +178,3 @@ class Weapon:
         weapon_type = "Weapon"
         accuracy = None
         return cls(name, examine_description, weapon_damage, weapon_type, accuracy)
-
-
-class Shield:
-    def __init__(self, name, examine_description, armour_type, deflection_chance, drop_chance):
-        self.name = name
-        self.examine_description = examine_description
-        self.armour_type = armour_type
-        self.drop_chance = drop_chance
-        self.deflection_chance = deflection_chance
-
-    def __str__(self):
-        return self.name
-
-    @classmethod
-    def bronze_square_shield(cls):
-        name = "Bronze Square shield"
-        examine_description = "A square shield made of bronze, it helps block enemy attacks."
-        armour_type = "Shield"
-        added_deflection_chance = 2
-        drop_chance = None
-        return cls(name, examine_description, armour_type, added_deflection_chance, drop_chance)
-
-    @classmethod
-    def bronze_kite_shield(cls):
-        name = "Bronze Kite shield"
-        examine_description = "A Kite shield made of bronze, it helps block enemy attacks better than a square shield."
-        armour_type = "Shield"
-        added_deflection_chance = 4
-        drop_chance = None
-        return cls(name, examine_description, armour_type, added_deflection_chance, drop_chance)
-
-
-class BodyArmour:
-    def __str__(self):
-        return self.name
-    pass
-
-
-class LegArmour:
-    def __str__(self):
-        return self.name
-    pass
-
-
-class Hands:
-    def __str__(self):
-        return self.name
-    pass
-
-
-class Feet:
-    def __str__(self):
-        return self.name
-    pass
