@@ -27,6 +27,7 @@ import Monster_Drop_Table_Rewrite
 import colorama
 import items_and_item_behaviors
 
+
 """
 This script is designed for a game where players can interact with multiple NPCs.
 Players can attack NPCs, loot them, and manage their inventory.
@@ -752,9 +753,9 @@ def guard_game_loop():
         guard.hp = 5
 
 
-goblin_loop()
-goblin_loop()
-goblin_loop()
+# goblin_loop()
+# goblin_loop()
+# goblin_loop()
 # player.hp = 10
 # giant_rat_loop()
 # player.hp = 10
