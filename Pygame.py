@@ -127,10 +127,10 @@ class CharacterActions:
             if event.key == pygame.K_SPACE:
                 player_surf.gravity = -20
                 print('jump')
+        character_actions.jump_mouse(event)
 
     @staticmethod
-    def jump_mouse():
-        for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
+    def jump_mouse(event):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 player_surf.gravity = -20
                 print('jump')
@@ -153,9 +153,17 @@ def exit_pygame(event):
 
 
 def for_event_list():
+    global game_active
     for event in pygame.event.get():
         exit_pygame(event)
-        character_actions.jump(event)
+
+        if game_active:
+            character_actions.jump(event)
+
+        else:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game_active = True
+                enemy.enemy_rect = enemy.enemy_surface.get_rect(midbottom=(10, 331))
 
 
 score_surface = ScoreSurface()
