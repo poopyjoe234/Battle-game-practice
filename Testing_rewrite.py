@@ -394,7 +394,7 @@ class Goblin:
 
     def __init__(self):
         """Initialize Goblin attributes."""
-        self.hp = 1
+        self.hp = 5
         self.damage = 1
         self.loot = []
 
@@ -753,10 +753,10 @@ def guard_game_loop():
         guard.hp = 5
 
 
-# goblin_loop()
-# goblin_loop()
-# goblin_loop()
-# player.hp = 10
-# giant_rat_loop()
-# player.hp = 10
-# guard_loop()
+goblin_loop()
+goblin_loop()
+goblin_loop()
+player.hp = 10
+giant_rat_loop()
+player.hp = 10
+guard_loop()
